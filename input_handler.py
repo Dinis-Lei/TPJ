@@ -6,6 +6,8 @@ class InputHandler():
     command = {
         pygame.K_LEFT: Left,
         pygame.K_RIGHT: Right,
+        pygame.K_UP: Up,
+        pygame.K_DOWN: Down,
         pygame.K_q: Quit,
         pygame.K_ESCAPE: Pause,
         pygame.K_SPACE: Shoot,

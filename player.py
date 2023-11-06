@@ -9,7 +9,7 @@ class Player(Actor):
         self.position = (40,20)
         self.velocity = 1
         self.lives = 3
-        self.sprite = PlayerSprite(name=...)
+        self.sprite = PlayerSprite(name="player1.png")
         self.observer = observer
 
         # Subscribe to events
@@ -36,6 +36,14 @@ class Player(Actor):
         self.position[0] = self.direction[0] * self.velocity
         self.position[1] = self.direction[1] * self.velocity
 
-    def update(self):
+    def update_sprite(self):
         """ Update sprite """
-        pass
+        if self.lives == 2:
+            self.sprite = self.sprite.update_sprite("player2.png")
+        elif self.lives == 1:
+            self.sprite = self.sprite.update_sprite("player1.png")
+        else:
+            self.sprite = self.sprite.update_sprite("player3.png")
+    
+    # def updatedir(self, dir):
+    #     super().updatedir(dir)
