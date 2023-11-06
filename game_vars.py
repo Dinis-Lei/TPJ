@@ -1,0 +1,3 @@
+SCALE = 10
+WIDTH = 120
+HEIGHT = 90
