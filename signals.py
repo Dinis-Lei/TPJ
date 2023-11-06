@@ -10,21 +10,13 @@ class Quit(Signal):
     def execute(listener, **kwargs):
         listener.quit() 
 
-class Left(Signal):
+class Accelerate(Signal):
     def execute(listener, **kwargs):
-        listener.left()
+        listener.accelerate()
 
-class Right(Signal):
+class Brake(Signal):
     def execute(listener, **kwargs):
-        listener.right()
-
-class Up(Signal):
-    def execute(listener, **kwargs):
-        listener.up()
-
-class Down(Signal):
-    def execute(listener, **kwargs):
-        listener.down()
+        listener.brake()
 
 class Shoot(Signal):
     def execute(listener, **kwargs):
@@ -33,3 +25,7 @@ class Shoot(Signal):
 class Update(Signal):
     def execute(listener, **kwargs):
         listener.update()
+
+class Move(Signal):
+    def execute(listener, **kwargs):
+        listener.move()

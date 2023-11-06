@@ -7,7 +7,7 @@ assetpath = "assets/SpaceShooterRedux/PNG/"
 display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 spriteDict = {}
 for img in os.listdir("./usedAssets"):
-    spriteDict[img.title] = image.load(f"./usedAssets/{img}")
+    spriteDict[img] = image.load(f"./usedAssets/{img}")
 
 class SpriteLoader:
     def __init__(self) -> None:
@@ -18,12 +18,14 @@ class SpriteLoader:
         self.sprite = self.sprites[name]
 
     def display_sprite(self, x, y):
-        display.blit(self.sprite, (SCALE * x, SCALE * y, SCALE, SCALE))
+        display.blit(self.sprite, (x, y, SCALE, SCALE))
 
 
 
 class PlayerSprite(SpriteLoader):
     def __init__(self, name) -> None:
+        super().__init__()
+        print(self.sprites)
         self.sprite = self.sprites[name]
     
     def update_sprite(self, name):
@@ -35,6 +37,7 @@ class PlayerSprite(SpriteLoader):
 
 class AsteroidSprite(SpriteLoader):
     def __init__(self, name) -> None:
+        super().__init__()
         self.sprite = self.sprites[name]
     
     def update_sprite(self, name):
@@ -46,6 +49,7 @@ class AsteroidSprite(SpriteLoader):
 
 class BulletSprite(SpriteLoader):
     def __init__(self, name) -> None:
+        super().__init__()
         self.sprite = self.sprites[name]
     
     def update_sprite(self, name):
@@ -56,6 +60,7 @@ class BulletSprite(SpriteLoader):
 
 class EnemySprite(SpriteLoader):
     def __init__(self, name) -> None:
+        super().__init__()
         self.sprite = self.sprites[name]
     
     def update_sprite(self, name):

@@ -4,10 +4,10 @@ from signals import *
 class InputHandler():
 
     command = {
-        pygame.K_LEFT: Left,
-        pygame.K_RIGHT: Right,
+        pygame.K_UP: Accelerate,
+        pygame.K_DOWN: Brake,
         pygame.K_q: Quit,
-        pygame.K_ESCAPE: Pause,
+        # pygame.K_ESCAPE: Pause,
         pygame.K_SPACE: Shoot,
     }
 
