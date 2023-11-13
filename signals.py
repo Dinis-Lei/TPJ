@@ -61,7 +61,7 @@ class UpdateLives(Signal):
 
 class UpdateHighScore(Signal):
     def execute(listener, **kwargs):
-        listener.update_highScore()
+        listener.update_highScore(score=kwargs["score"])
 
 class UpdateNukes(Signal):
     def execute(listener, **kwargs):

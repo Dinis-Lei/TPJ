@@ -15,6 +15,7 @@ class HUD():
         self.observer.subscribe(UpdateHighScore, self)
         self.observer.subscribe(UpdateNukes, self)
         self.observer.subscribe(Display, self)
+        self.scores=[]
         self.screen = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 
 
@@ -28,8 +29,21 @@ class HUD():
         self.nukes = nukes
     
     def update_highScore(self, score):
-        if score > self.high_score:
-            self.high_score = score
+        file = open("./scores.txt","r")
+        
+        line = file.readline()
+        while(line):
+            self.scores.append(int(line.split("-")[1].removesuffix("\n")))
+            line=file.readline()
+        print(self.scores)
+        self.scores.append(score)
+        self.scores.sort(reverse=True)
+        self.scores.pop()
+        print(self.scores)
+        file.close()
+        file = open("./scores.txt","w")
+        file.write(f"1-{self.scores[0]}\n2-{self.scores[1]}\n3-{self.scores[2]}")      
+        file.close()
 
     def display(self):
         font = pygame.font.SysFont("Comic Sans", 36)
@@ -39,4 +53,3 @@ class HUD():
         self.screen.blit(txtsurf,(0,0))
         self.screen.blit(txtsurf2,(0,25))
         self.screen.blit(txtsurf3,(0,50))
-
