@@ -18,6 +18,6 @@ class Bullet(Actor):
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
 
-    def update_sprite(self):
+    def update(self):
         """ Update sprite """
         self.sprite = self.sprite.update_sprite("bullethit.png")

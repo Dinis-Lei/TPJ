@@ -1,6 +1,7 @@
+import pygame
 from actor import Actor
 from observer import Observer
-from signals import Accelerate, Brake, Shoot, Update, Move
+from signals import Accelerate, Brake, Shoot, Display, Move
 from spriteloader import PlayerSprite
 import math
 
@@ -11,16 +12,16 @@ class Player(Actor):
     def __init__(self, observer: Observer) -> None:
         self.direction = -math.pi/2
         self.position =  [40,20]
-        self.velocity = 1
+        self.velocity = 0
         self.lives = 3
-        self.sprite = PlayerSprite(name="player1.png")
+        self.sprite = PlayerSprite(name="player3.png")
         self.observer = observer
 
         # Subscribe to events
         self.observer.subscribe(Accelerate, self)
         self.observer.subscribe(Brake, self)
         self.observer.subscribe(Shoot, self)
-        self.observer.subscribe(Update, self)
+        self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
 
 
@@ -49,14 +50,32 @@ class Player(Actor):
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
 
-    def update_sprite(self):
+    def update(self):
         """ Update sprite """
         if self.lives == 2:
-            self.sprite = self.sprite.update_sprite("player2.png")
+            self.sprite.update_sprite(name="player2.png")
         elif self.lives == 1:
-            self.sprite = self.sprite.update_sprite("player1.png")
+            self.sprite.update_sprite(name="player1.png")
         else:
-            self.sprite = self.sprite.update_sprite("player3.png")
+            self.sprite.update_sprite(name="player3.png")
+
+    def rotate(self):
+        x = pygame.mouse.get_pos()[0] - self.position[0]
+        y = pygame.mouse.get_pos()[1] - self.position[1]
+        print(self.direction, self.position, pygame.mouse.get_pos())
+        if x != 0 and abs(x)>10:
+            self.direction = math.atan2(y,x)
+            self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(-self.direction*180/math.pi-90)%360))
     
+    def display(self):
+        self.rotate()
+        self.sprite.display_sprite(self.position[0], self.position[1])
+        
+    
+
+    
+
+
+
     # def updatedir(self, dir):
     #     super().updatedir(dir)
