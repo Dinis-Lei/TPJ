@@ -77,7 +77,7 @@ class EnemyCrazy(Enemy):
     
     def calculate_angle(self, posPlayer):
         x = posPlayer[0] - self.position[0]
-        y = posPlayer[1] - self.direction[1]
+        y = posPlayer[1] - self.position[1]
         if x != 0:
             self.direction += math.atan(y/x)
         

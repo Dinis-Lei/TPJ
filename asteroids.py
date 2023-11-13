@@ -18,7 +18,7 @@ class Asteroid(Actor):
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
 
-    def update_sprite(self):
+    def update(self):
         """ Update sprite """
         i = random.random()
         if i > 0.85:

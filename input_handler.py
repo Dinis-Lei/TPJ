@@ -12,7 +12,7 @@ class InputHandler():
     }
 
     def handle_input(self):
-        command = [Nothing]
+        command = [Nothing] 
 
         for key in self.command:
             if pygame.key.get_pressed()[key]:

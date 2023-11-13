@@ -1,3 +1,4 @@
+import pygame
 from actor import Actor
 from observer import Observer
 from signals import *
@@ -51,17 +52,32 @@ class Player(Actor):
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
 
-    def update_sprite(self):
+    def update(self):
         """ Update sprite """
         if self.lives == 2:
-            self.sprite.update_sprite("player2.png")
+            self.sprite.update_sprite(name="player2.png")
         elif self.lives == 1:
-            self.sprite.update_sprite("player1.png")
+            self.sprite.update_sprite(name="player1.png")
         else:
-            self.sprite.update_sprite("player3.png")
+            self.sprite.update_sprite(name="player3.png")
+
+    def rotate(self):
+        x = pygame.mouse.get_pos()[0] - self.position[0]
+        y = pygame.mouse.get_pos()[1] - self.position[1]
+        print(self.direction, self.position, pygame.mouse.get_pos())
+        if x != 0 and abs(x)>10:
+            self.direction = math.atan2(y,x)
+            self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(-self.direction*180/math.pi-90)%360))
     
     def display(self):
+        self.rotate()
         self.sprite.display_sprite(self.position[0], self.position[1])
+        
+    
+
+    
+
+
 
     # def updatedir(self, dir):
     #     super().updatedir(dir)
