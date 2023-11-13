@@ -25,7 +25,6 @@ class SpriteLoader:
 class PlayerSprite(SpriteLoader):
     def __init__(self, name) -> None:
         super().__init__()
-        print(self.sprites)
         self.sprite = self.sprites[name]
     
     def update_sprite(self, name):
@@ -68,3 +67,13 @@ class EnemySprite(SpriteLoader):
 
     def display_sprite(self, x, y):
         super().display_sprite(x,y)
+
+class CollisionSprite(SpriteLoader):
+    def __init__(self, width, height) -> None:
+        super().__init__()
+        self.surface = pygame.Surface((SCALE*width, SCALE*height))
+        self.surface.set_alpha(128)
+        self.surface.fill("blue")
+
+    def display_sprite(self, x, y):
+        display.blit(self.surface, (x, y))

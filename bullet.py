@@ -7,7 +7,7 @@ from spriteloader import BulletSprite
 class Bullet(Actor):
     def __init__(self, observer: Observer, direction) -> None:
         self.direction = 0     # direction angle
-        self.position = (0,0)
+        self.position = [0,0]
         self.velocity = 2
         self.sprite = BulletSprite("bullet.png")
         self.observer = observer

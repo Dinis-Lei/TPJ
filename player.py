@@ -1,7 +1,8 @@
 from actor import Actor
 from observer import Observer
-from signals import Accelerate, Brake, Shoot, Update, Move
+from signals import *
 from spriteloader import PlayerSprite
+from collision import *
 import math
 
 AccelerateMAX = 20
@@ -9,19 +10,20 @@ BrakeMAX = -10
 
 class Player(Actor):
     def __init__(self, observer: Observer) -> None:
+        super().__init__([40,20], PlayerSprite("player1.png"))
         self.direction = -math.pi/2
-        self.position =  [40,20]
-        self.velocity = 1
+        self.velocity = 0
         self.lives = 3
-        self.sprite = PlayerSprite(name="player1.png")
         self.observer = observer
 
         # Subscribe to events
         self.observer.subscribe(Accelerate, self)
         self.observer.subscribe(Brake, self)
         self.observer.subscribe(Shoot, self)
-        self.observer.subscribe(Update, self)
+        self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
+
+        self.collision_box = CollisionCircle(self, self.observer, center=self.position, radius=40)
 
 
     def up(self):
@@ -52,11 +54,14 @@ class Player(Actor):
     def update_sprite(self):
         """ Update sprite """
         if self.lives == 2:
-            self.sprite = self.sprite.update_sprite("player2.png")
+            self.sprite.update_sprite("player2.png")
         elif self.lives == 1:
-            self.sprite = self.sprite.update_sprite("player1.png")
+            self.sprite.update_sprite("player1.png")
         else:
-            self.sprite = self.sprite.update_sprite("player3.png")
+            self.sprite.update_sprite("player3.png")
     
+    def display(self):
+        self.sprite.display_sprite(self.position[0], self.position[1])
+
     # def updatedir(self, dir):
     #     super().updatedir(dir)

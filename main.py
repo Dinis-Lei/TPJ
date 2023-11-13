@@ -35,7 +35,7 @@ class MainLoop():
                 self.obs.notify(command)
 
             self.obs.notify(Move)
-            self.obs.notify(Update) # Update all sprites
+            self.obs.notify(Display) # Update all sprites
             # update window
             pygame.display.flip()
             self.clock.tick(15)
