@@ -39,7 +39,7 @@ class CollisionCircle(Collision):
 
     def display(self):
         self.circle  = pygame.Surface((self.radius*SCALE, self.radius*SCALE), pygame.SRCALPHA)
-        pygame.draw.circle(self.circle, (255, 255, 0, 128), (50,40), self.radius)
+        pygame.draw.circle(self.circle, (255, 255, 0, 128), self.center, self.radius)
         display.blit(self.circle, self.actor.position)
 
 

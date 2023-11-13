@@ -23,7 +23,7 @@ class Player(Actor):
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
 
-        self.collision_box = CollisionCircle(self, self.observer, center=self.position, radius=40)
+        self.collision_box = CollisionCircle(self, self.observer, center=(50,40), radius=40)
 
 
     def up(self):
