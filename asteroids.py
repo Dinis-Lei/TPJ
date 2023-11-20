@@ -11,11 +11,12 @@ class Asteroid(Actor):
     def __init__(self, observer: Observer, direction = 0, velocity = 1) -> None:
         self.direction = direction
         self.position = [300,200]
+        self.center = (50, 40)
         self.velocity = velocity
         self.sprite = AsteroidSprite("asteroid.png")
         self.observer = observer
 
-        self.collision_box = CollisionCircle(self, self.observer, center=(50,40), radius=40)
+        self.collision_box = CollisionCircle(self, self.observer, center=self.center, radius=40)
         self.collision_box.set_enter_func(self.hit_object)
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
@@ -32,7 +33,7 @@ class Asteroid(Actor):
 
 
     def display(self):
-        return super().display()
+        self.sprite.display_sprite(self.position[0] - self.center[0], self.position[1] - self.center[1])
 
     def update(self):
         """ Update sprite """

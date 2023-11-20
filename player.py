@@ -33,10 +33,10 @@ class Player(Actor):
         self.collision_box = CollisionCircle(self, self.observer, center=self.rect.center, radius=50)
         self.collision_box.set_enter_func(self.damage_taken)
 
-        # draw circle
-        self.circle = pygame.sprite.Sprite()
-        self.circle.image  = pygame.Surface((99, 99), pygame.SRCALPHA)
-        pygame.draw.circle(self.circle.image, (255, 255, 0, 128), self.rect.center, 50)
+        # # draw circle
+        # self.circle = pygame.sprite.Sprite()
+        # self.circle.image  = pygame.Surface((99, 99), pygame.SRCALPHA)
+        # pygame.draw.circle(self.circle.image, (255, 255, 0, 128), self.rect.center, 50)
         
         self.test_angle = 0
         self.center = (49, 49)
@@ -53,9 +53,6 @@ class Player(Actor):
     def move(self):
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
-        self.pivot[0] += math.cos(self.direction) * self.velocity
-        self.pivot[1] += math.sin(self.direction) * self.velocity
-        #print(self.pivot)
 
         self.collision_box.check_collision()
 
@@ -68,18 +65,6 @@ class Player(Actor):
         else:
             self.sprite.update_sprite(name="player3.png")
 
-    # def rotate(self):
-    #     x = pygame.mouse.get_pos()[0] - self.position[0]
-    #     y = pygame.mouse.get_pos()[1] - self.position[1]
-    #     # print(self.direction, self.position, pygame.mouse.get_pos())
-    #     if x != 0 and abs(x)>10:
-    #         self.direction = math.atan2(y,x)
-    #         self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(-self.direction*180/math.pi-90)%360))
-    #         self.rect = self.sprite.get_sprite().get_rect()
-
-    #         #rotated_offset = self.offset.rotate_rad(self.direction)
-    #         #self.rect = self.sprite.get_sprite().get_rect(center=self.position+rotated_offset)
-    
     def shoot(self):
         bullet = Bullet(self.observer, self.direction, self.position)
         print("shooting")
@@ -91,11 +76,9 @@ class Player(Actor):
         x = pygame.mouse.get_pos()[0] - self.position[0]
         y = pygame.mouse.get_pos()[1] - self.position[1]
 
-        print(f"Before: {self.direction}")
         new_direction = math.atan2(y,x)
         if abs(self.direction-new_direction) > 5*math.pi/180:
             self.direction = new_direction
-        print(f"After: {self.direction}")
 
         # offset from pivot to center
         image_rect = image.get_rect(topleft = (self.position[0] - self.center[0], self.position[1]-self.center[1]))
@@ -110,11 +93,6 @@ class Player(Actor):
         rotated_image = pygame.transform.rotate(image, int(-self.direction*180/math.pi-90)%360)
         rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
 
-        # # rotate and blit the image
-        # surf.blit(rotated_image, rotated_image_rect)
-    
-        # # draw rectangle around the image
-        # pygame.draw.rect(surf, (255, 0, 0), (*rotated_image_rect.topleft, *rotated_image.get_size()),2)
         return rotated_image, rotated_image_rect
 
     def display(self):
@@ -123,16 +101,11 @@ class Player(Actor):
         #self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(self.test_angle)%360))
 
         img, rect = self.rotate()#blitRotate(self.sprite.get_sprite(), self.position, (49,49), self.test_angle)
-        print(rect)
         self.rect = self.sprite.get_sprite().get_rect()
         display.blit(img, rect)
         #self.sprite.display_sprite(self.position[0] + self.rect[0], self.position[1] + self.rect[1])
-        display.blit(self.circle.image, (self.position[0]-49, self.position[1]-49))
-        print(f"Player position: {self.position}")
-        print(f"Rect center position: {self.rect.center}")
-        print(f"Circle center position: {self.circle.image.get_rect().center}")
-        print(f"Rect position: {self.rect}")
-        print(f"Circle position: {self.circle.image.get_rect()}")
+        # display.blit(self.circle.image, (self.position[0]-49, self.position[1]-49))
+
 
         
         

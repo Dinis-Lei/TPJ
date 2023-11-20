@@ -55,7 +55,7 @@ class CollisionCircle(Collision):
         self.enter_func = func
 
     def display(self):
-        display.blit(self.circle.image, self.parent.position)
+        display.blit(self.circle.image, (self.parent.position[0] - self.center[0], self.parent.position[1] - self.center[1]))
 
 
     def check_collision(self):
