@@ -39,6 +39,7 @@ class Player(Actor):
         pygame.draw.circle(self.circle.image, (255, 255, 0, 128), self.rect.center, 50)
         
         self.test_angle = 0
+        self.center = (49, 49)
 
     def accelerate(self):
         self.velocity += 1 if self.velocity < AccelerateMAX else 0
@@ -67,37 +68,46 @@ class Player(Actor):
         else:
             self.sprite.update_sprite(name="player3.png")
 
-    def rotate(self):
-        x = pygame.mouse.get_pos()[0] - self.position[0]
-        y = pygame.mouse.get_pos()[1] - self.position[1]
-        # print(self.direction, self.position, pygame.mouse.get_pos())
-        if x != 0 and abs(x)>10:
-            self.direction = math.atan2(y,x)
-            self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(-self.direction*180/math.pi-90)%360))
-            self.rect = self.sprite.get_sprite().get_rect()
+    # def rotate(self):
+    #     x = pygame.mouse.get_pos()[0] - self.position[0]
+    #     y = pygame.mouse.get_pos()[1] - self.position[1]
+    #     # print(self.direction, self.position, pygame.mouse.get_pos())
+    #     if x != 0 and abs(x)>10:
+    #         self.direction = math.atan2(y,x)
+    #         self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(-self.direction*180/math.pi-90)%360))
+    #         self.rect = self.sprite.get_sprite().get_rect()
 
-            #rotated_offset = self.offset.rotate_rad(self.direction)
-            #self.rect = self.sprite.get_sprite().get_rect(center=self.position+rotated_offset)
+    #         #rotated_offset = self.offset.rotate_rad(self.direction)
+    #         #self.rect = self.sprite.get_sprite().get_rect(center=self.position+rotated_offset)
     
     def shoot(self):
         bullet = Bullet(self.observer, self.direction, self.position)
         print("shooting")
     
 
-    def blitRotate(self,image, pos, originPos, angle):
+    def rotate(self):
+        image = self.sprite.get_sprite()
+
+        x = pygame.mouse.get_pos()[0] - self.position[0]
+        y = pygame.mouse.get_pos()[1] - self.position[1]
+
+        print(f"Before: {self.direction}")
+        new_direction = math.atan2(y,x)
+        if abs(self.direction-new_direction) > 5*math.pi/180:
+            self.direction = new_direction
+        print(f"After: {self.direction}")
 
         # offset from pivot to center
-        image_rect = image.get_rect(topleft = (pos[0] - originPos[0], pos[1]-originPos[1]))
-        offset_center_to_pivot = pygame.math.Vector2(pos) - image_rect.center
-        
+        image_rect = image.get_rect(topleft = (self.position[0] - self.center[0], self.position[1]-self.center[1]))
+        offset_center_to_pivot = pygame.math.Vector2(self.position) - image_rect.center
         # roatated offset from pivot to center
-        rotated_offset = offset_center_to_pivot.rotate(-angle)
+        rotated_offset = offset_center_to_pivot.rotate(-int(-self.direction*180/math.pi-90)%360)
 
         # rotated image center
-        rotated_image_center = (pos[0] - rotated_offset.x, pos[1] - rotated_offset.y)
+        rotated_image_center = (self.position[0] - rotated_offset.x, self.position[1] - rotated_offset.y)
 
         # get a rotated image
-        rotated_image = pygame.transform.rotate(image, angle)
+        rotated_image = pygame.transform.rotate(image, int(-self.direction*180/math.pi-90)%360)
         rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
 
         # # rotate and blit the image
@@ -110,9 +120,9 @@ class Player(Actor):
     def display(self):
         #self.rotate()
         self.test_angle += 2
-        self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(self.test_angle)%360))
+        #self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(self.test_angle)%360))
 
-        img, rect = self.blitRotate(self.sprite.get_sprite(), self.position, (49,49), self.test_angle)
+        img, rect = self.rotate()#blitRotate(self.sprite.get_sprite(), self.position, (49,49), self.test_angle)
         print(rect)
         self.rect = self.sprite.get_sprite().get_rect()
         display.blit(img, rect)
