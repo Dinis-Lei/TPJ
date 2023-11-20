@@ -86,3 +86,7 @@ class CollisionCircle(Collision):
         #     if not self.is_colliding:
         #         self.is_colliding = True
         #         self.enter_func()
+
+
+    def rotate(self, angle):
+        pass

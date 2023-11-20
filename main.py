@@ -32,7 +32,7 @@ class MainLoop():
         
 
         while self.running:
-            self.display.fill("black")
+            self.display.fill("white")
             commands = self.input_handler.handle_input()
             for command in commands:
                 self.obs.notify(command)

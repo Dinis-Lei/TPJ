@@ -38,8 +38,8 @@ class PlayerSprite(SpriteLoader):
         else:
             super().update_sprite(name)
 
-    def display_sprite(self, x, y, rect):
-        super().display_sprite(x,y, rect)
+    def display_sprite(self, x, y):
+        display.blit(self.sprite, (x,y, SCALE, SCALE))
     
     def get_sprite(self):
         return self.sprites[self.og]
@@ -54,7 +54,7 @@ class AsteroidSprite(SpriteLoader):
         super().update_sprite(name)
 
     def display_sprite(self, x, y):
-        super().display_sprite(x,y)
+        display.blit(self.sprite, (x,y, SCALE, SCALE))
 
 
 class BulletSprite(SpriteLoader):
