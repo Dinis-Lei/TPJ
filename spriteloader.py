@@ -20,8 +20,8 @@ class SpriteLoader:
         else:
             self.sprite = self.sprites[name]
 
-    def display_sprite(self, x, y):
-        display.blit(self.sprite, (x, y, SCALE, SCALE))
+    def display_sprite(self, x, y, rect):
+        display.blit(self.sprite, rect)
 
 
 
@@ -37,8 +37,8 @@ class PlayerSprite(SpriteLoader):
         else:
             super().update_sprite(name)
 
-    def display_sprite(self, x, y):
-        super().display_sprite(x,y)
+    def display_sprite(self, x, y, rect):
+        super().display_sprite(x,y, rect)
     
     def get_sprite(self):
         return self.sprites[self.og]
@@ -60,12 +60,16 @@ class BulletSprite(SpriteLoader):
     def __init__(self, name) -> None:
         super().__init__()
         self.sprite = self.sprites[name]
-    
+        self.og = name
+        
     def update_sprite(self, name):
         super().update_sprite(name)
 
     def display_sprite(self, x, y):
         super().display_sprite(x,y)
+    
+    def get_sprite(self):
+        return self.sprites[self.og]
 
 class EnemySprite(SpriteLoader):
     def __init__(self, name) -> None:

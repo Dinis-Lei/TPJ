@@ -24,7 +24,7 @@ class Shoot(Signal):
 
 class Pause(Signal):
     def execute(listener, **kwargs):
-        listener.shoot()
+        listener.pause()
 
 class Display(Signal):
     def execute(listener, **kwargs):
