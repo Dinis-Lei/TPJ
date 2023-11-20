@@ -1,4 +1,5 @@
 from pygame import image
+from pygame.math import Vector2
 import pygame
 from game_vars import SCALE, WIDTH, HEIGHT
 import os
@@ -6,8 +7,8 @@ import os
 assetpath = "assets/SpaceShooterRedux/PNG/"
 display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 spriteDict = {}
-for img in os.listdir("projeto/TPJ/usedAssets"):
-    spriteDict[img] = image.load(f"projeto/TPJ/usedAssets/{img}")
+for img in os.listdir("./usedAssets"):
+    spriteDict[img] = image.load(f"./usedAssets/{img}")
 
 class SpriteLoader:
     def __init__(self) -> None:
@@ -26,7 +27,7 @@ class SpriteLoader:
 
 
 class PlayerSprite(SpriteLoader):
-    def __init__(self, name) -> None:
+    def __init__(self, name, angle=0) -> None:
         super().__init__()
         self.sprite = self.sprites[name]
         self.og = name

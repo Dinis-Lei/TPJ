@@ -5,6 +5,7 @@ from observer import Observer
 from signals import *
 from player import Player
 from game_vars import SCALE, WIDTH, HEIGHT
+from asteroids import Asteroid
 
 
 class MainLoop():
@@ -27,6 +28,8 @@ class MainLoop():
         print("Starting game")
 
         player = Player(self.obs)
+        asteroid = Asteroid.factory(self.obs)
+        
 
         while self.running:
             self.display.fill("black")
@@ -39,6 +42,7 @@ class MainLoop():
             # update window
             pygame.display.flip()
             self.clock.tick(15)
+
 
     def menu(self):
         menu = pygame_menu.Menu('Welcome', 1200, 900,

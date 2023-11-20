@@ -28,20 +28,8 @@ class Player(Actor):
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
 
-        self.collision_box = CollisionCircle(self, self.observer, center=(0,0), radius=40)
-
-
-    def up(self):
-        self.direction[1] = -1
-
-    def down(self):
-        self.direction[1] = 1
-    
-    def left(self):
-        self.direction[0] = -1
-
-    def right(self):
-        self.direction[0] = 1
+        self.collision_box = CollisionCircle(self, self.observer, center=(50,40), radius=40)
+        self.collision_box.set_enter_func(self.damage_taken)
 
     def accelerate(self):
         self.velocity += 1 if self.velocity < AccelerateMAX else 0
@@ -59,6 +47,8 @@ class Player(Actor):
         self.pivot[1] += math.sin(self.direction) * self.velocity
         print(self.pivot)
 
+        self.collision_box.check_collision()
+
     def update(self):
         """ Update sprite """
         if self.lives == 2:
@@ -71,7 +61,7 @@ class Player(Actor):
     def rotate(self):
         x = pygame.mouse.get_pos()[0] - self.position[0]
         y = pygame.mouse.get_pos()[1] - self.position[1]
-        #print(self.direction, self.position, pygame.mouse.get_pos())
+        # print(self.direction, self.position, pygame.mouse.get_pos())
         if x != 0 and abs(x)>10:
             self.direction = math.atan2(y,x)
             self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(-self.direction*180/math.pi-90)%360))
@@ -87,7 +77,12 @@ class Player(Actor):
         self.sprite.display_sprite(self.position[0], self.position[1], self.rect)
         
     
-
+    def damage_taken(self):
+        print(f"Damage taken, Lives {self.lives}")
+        self.lives -= 1
+        if self.lives == 0:
+            self.observer.notify(Quit)
+    
     
 
 
