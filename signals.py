@@ -33,3 +33,7 @@ class Display(Signal):
 class Move(Signal):
     def execute(listener, **kwargs):
         listener.move()
+
+class CheckCollision(Signal):
+    def execute(listener, **kwargs):
+        listener.check_collision(**kwargs)
