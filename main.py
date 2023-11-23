@@ -26,9 +26,8 @@ class MainLoop():
 
     def run(self):
         print("Starting game")
-
+        frame = 0
         player = Player(self.obs)
-        asteroid = Asteroid.factory(self.obs)
         
 
         while self.running:
@@ -36,12 +35,19 @@ class MainLoop():
             commands = self.input_handler.handle_input()
             for command in commands:
                 self.obs.notify(command)
-
+            print(f"Frame: {frame}")
             self.obs.notify(Move)
+            self.obs.notify(CheckCollision)
+            self.obs.notify(Update)
             self.obs.notify(Display) # Update all sprites
             # update window
             pygame.display.flip()
             self.clock.tick(15)
+
+            if (frame % 30) == 0:
+                Asteroid.factory(self.obs)
+
+            frame += 1
 
 
     def menu(self):

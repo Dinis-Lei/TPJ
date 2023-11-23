@@ -22,7 +22,7 @@ class Enemy(Actor):
         """ Update sprite """
         pass
 
-
+    @classmethod
     def factory(cls, observer: Observer):
         direction = math.radians(random.randint(0,360))
         velocity = 1 # testar depois a velocidade

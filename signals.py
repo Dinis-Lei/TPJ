@@ -34,6 +34,10 @@ class Move(Signal):
     def execute(listener, **kwargs):
         listener.move()
 
+class Update(Signal):
+    def execute(listener, **kwargs):
+        listener.update()
+
 class CheckCollision(Signal):
     def execute(listener, **kwargs):
         listener.check_collision(**kwargs)

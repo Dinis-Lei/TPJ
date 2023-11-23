@@ -22,6 +22,7 @@ class Player(Actor):
         self.offset = pygame.math.Vector2(30, 0)
         self.rect = self.sprite.get_sprite().get_rect()
         self.observer = observer
+        self.delete = False
 
         # Subscribe to events
         self.observer.subscribe(Accelerate, self)
@@ -29,6 +30,8 @@ class Player(Actor):
         self.observer.subscribe(Shoot, self)
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
+        self.observer.subscribe(Update, self)
+        self.observer.subscribe(CheckCollision, self)
 
         self.collision_box = CollisionCircle(self, self.observer, center=self.rect.center, radius=50)
         self.collision_box.set_enter_func(self.damage_taken)
@@ -54,6 +57,9 @@ class Player(Actor):
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
 
+        self.collision_box.move()
+
+    def check_collision(self):
         self.collision_box.check_collision()
 
     def update(self):
@@ -64,6 +70,13 @@ class Player(Actor):
             self.sprite.update_sprite(name="player1.png")
         else:
             self.sprite.update_sprite(name="player3.png")
+
+        if self.delete:
+            self.observer.unsubscribe(Display, self)
+            self.observer.unsubscribe(Move, self)
+            self.observer.unsubscribe(Update, self)
+            self.collision_box = self.collision_box.delete()
+            self.observer.notify(Quit)
 
     def shoot(self):
         bullet = Bullet(self.observer, self.direction, self.position)
@@ -114,7 +127,7 @@ class Player(Actor):
         print(f"Damage taken, Lives {self.lives}")
         self.lives -= 1
         if self.lives == 0:
-            self.observer.notify(Quit)
+            self.delete = True
     
     
 

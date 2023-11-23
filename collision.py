@@ -18,6 +18,11 @@ class Collision():
         self.obs.subscribe(Display, self)
         self.obs.subscribe(CheckCollision, self)
 
+    def delete(self):
+        self.obs.unsubscribe(Display, self)
+        self.obs.unsubscribe(CheckCollision, self)
+        self.parent = None
+
 class CollisionBox(Collision):
 
     def __init__(self, actor: Actor, observer: Observer, width, height) -> None:
@@ -43,7 +48,6 @@ class CollisionCircle(Collision):
         self.circle = pygame.sprite.Sprite()
         self.circle.image  = pygame.Surface((self.radius*SCALE, self.radius*SCALE), pygame.SRCALPHA)
         pygame.draw.circle(self.circle.image, (255, 255, 0, 128) if DEBUG_COLLISION else (0,0,0,0) , self.center, self.radius)
-        print(center)
         self.circle.rect = pygame.Rect(self.parent.position[0] + self.center[0], 
                                        self.parent.position[1] + self.center[1], 0, 0)
         self.circle.radius = self.radius
@@ -58,11 +62,10 @@ class CollisionCircle(Collision):
         display.blit(self.circle.image, (self.parent.position[0] - self.center[0], self.parent.position[1] - self.center[1]))
 
 
-    def check_collision(self):
-
-        #print(self.circle.rect.center)
+    def move(self):
         self.circle.rect.center = (self.parent.position[0]+self.center[0], self.parent.position[1]+self.center[1])
 
+    def check_collision(self):
         collide = pygame.sprite.spritecollide(self.circle, collision_group, False, pygame.sprite.collide_circle)
 
 
@@ -76,17 +79,6 @@ class CollisionCircle(Collision):
             pygame.draw.circle(display, (255, 0, 255), s.rect.center, s.rect.width // 2, 2)
 
 
-        # print("Checking collision")
-        # position = message['position']
-
-        # global_x = self.parent.position[0] + self.center[0]
-        # global_y = self.parent.position[1] + self.center[1]
-
-        # if (global_x - position[0])**2 + (global_y - position[1])**2 < self.radius**2:
-        #     if not self.is_colliding:
-        #         self.is_colliding = True
-        #         self.enter_func()
-
-
-    def rotate(self, angle):
-        pass
+    def delete(self):
+        super().delete()
+        collision_group.remove(self.circle)
