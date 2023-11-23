@@ -8,18 +8,23 @@ from spriteloader import AsteroidSprite
 from signals import *
 
 class Asteroid(Actor):
-    def __init__(self, observer: Observer, direction = 0, velocity = 1, position = [0,0]) -> None:
+    def __init__(self, observer: Observer, direction = 0, velocity = 1, position = [0,0], small=False) -> None:
         self.observer = observer
         self.direction = direction
         self.position = position
         self.velocity = velocity
         self.delete = False
+        self.small = small
         self.id = id(self)
-        print(f"Spawned asteroid {self.id}")
+        if small:
+            print(f"Spawned small asteroid {self.id}")
+        else:
+            print(f"Spawned asteroid {self.id}")
 
-        self.sprite = AsteroidSprite("asteroid.png")
-        self.center = (50, 40)
-        self.collision_box = CollisionCircle(self, self.observer, center=self.center, radius=40)
+        self.sprite = AsteroidSprite("asteroid.png" if not small else "smallerasteroid.png")
+        # self.sprite.sprite.set_colorkey((131,96,73))
+        self.center = (50, 40) if not small else (15, 10)
+        self.collision_box = CollisionCircle(self, self.observer, center=self.center, radius=40 if not small else 15)
         self.collision_box.set_enter_func(self.hit_object)
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
@@ -51,6 +56,10 @@ class Asteroid(Actor):
             self.observer.unsubscribe(Update, self)
             self.collision_box = self.collision_box.delete()
 
+            if random.random() < 1 and not self.small:
+                print("A")
+                Asteroid.factory_small(self.observer, self.position)
+
     
 
     @classmethod
@@ -76,3 +85,15 @@ class Asteroid(Actor):
             position = [-100 ,random.gauss(mu, sigma)]
 
         return Asteroid(observer, direction, velocity, position)
+    
+    @classmethod
+    def factory_small(cls, observer: Observer, position):
+        n = random.randint(1,4)
+        directions = [math.pi/4, 3*math.pi/4, 5*math.pi/4, 7*math.pi/4]
+        for i in range(n):
+            velocity = random.randint(1,5) # testar depois a velocidade
+            direction = directions[random.randint(0, len(directions)-1)]
+            directions.remove(direction)
+            position = [position[0] + math.cos(direction) * 30, position[1] + math.sin(direction) * 30]
+            Asteroid(observer, direction, velocity, position, small=True)
+

@@ -35,7 +35,7 @@ class MainLoop():
             commands = self.input_handler.handle_input()
             for command in commands:
                 self.obs.notify(command)
-            print(f"Frame: {frame}")
+            #print(f"Frame: {frame}")
             self.obs.notify(Move)
             self.obs.notify(CheckCollision)
             self.obs.notify(Update)

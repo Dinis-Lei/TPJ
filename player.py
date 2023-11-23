@@ -18,7 +18,7 @@ class Player(Actor):
         self.direction = -math.pi/2
         self.pivot = [40,57]
         self.velocity = 0
-        self.lives = 3
+        self.lives = 100
         self.offset = pygame.math.Vector2(30, 0)
         self.rect = self.sprite.get_sprite().get_rect()
         self.observer = observer
