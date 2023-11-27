@@ -5,7 +5,9 @@ class InputHandler():
 
     command = {
         pygame.K_UP: Accelerate,
+        pygame.K_w: Accelerate,
         pygame.K_DOWN: Brake,
+        pygame.K_s: Brake,
         pygame.K_q: Quit,
         # pygame.K_ESCAPE: Pause,
         pygame.K_SPACE: Shoot,

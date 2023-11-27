@@ -16,22 +16,17 @@ class Asteroid(Actor):
         self.delete = False
         self.small = small
         self.id = id(self)
-        if small:
-            print(f"Spawned small asteroid {self.id}")
-        else:
-            print(f"Spawned asteroid {self.id}")
-
+        
         self.sprite = AsteroidSprite("asteroid.png" if not small else "smallerasteroid.png")
         # self.sprite.sprite.set_colorkey((131,96,73))
-        self.center = (50, 40) if not small else (15, 10)
-        self.collision_box = CollisionCircle(self, self.observer, center=self.center, radius=40 if not small else 15)
+        self.center = (40, 40) if not small else (15, 10)
+        self.collision_box = CollisionCircle(self, self.observer, center=self.center, radius=45 if not small else 15)
         self.collision_box.set_enter_func(self.hit_object)
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
         self.observer.subscribe(Update, self)
 
     def hit_object(self):
-        print(f"Hit object {self.id}")
         self.delete = True
 
     def move(self):
@@ -50,14 +45,12 @@ class Asteroid(Actor):
     def update(self):
         """ Update object """
         if self.delete:
-            print(f"Deleted asteroid {self.id}")
             self.observer.unsubscribe(Display, self)
             self.observer.unsubscribe(Move, self)
             self.observer.unsubscribe(Update, self)
             self.collision_box = self.collision_box.delete()
 
-            if random.random() < 1 and not self.small:
-                print("A")
+            if random.random() < 0.70 and not self.small:
                 Asteroid.factory_small(self.observer, self.position)
 
     
@@ -90,7 +83,7 @@ class Asteroid(Actor):
     def factory_small(cls, observer: Observer, position):
         n = random.randint(1,4)
         directions = [math.pi/4, 3*math.pi/4, 5*math.pi/4, 7*math.pi/4]
-        for i in range(n):
+        for _ in range(n):
             velocity = random.randint(1,5) # testar depois a velocidade
             direction = directions[random.randint(0, len(directions)-1)]
             directions.remove(direction)
