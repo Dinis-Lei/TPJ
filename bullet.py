@@ -18,7 +18,6 @@ class Bullet(Actor):
         self.observer = observer
 
         self.observer.subscribe(Display, self)
-        print("AAAAAAAAAA")
         self.observer.subscribe(Move, self)
         self.observer.subscribe(Update, self)
 
@@ -30,9 +29,8 @@ class Bullet(Actor):
         self.delete = False
 
     def hit(self):
-        #self.delete = True
-        pass
-
+        self.delete = True
+        
     def rotate(self):
         image = self.sprite.get_sprite()
         # offset from pivot to center
@@ -66,7 +64,6 @@ class Bullet(Actor):
             self.collision_box = self.collision_box.delete()
     
     def display(self):
-        print("displaying bullet")
         img, rect = self.rotate()
         self.sprite.update_sprite(img)
         self.sprite.display_sprite(rect)

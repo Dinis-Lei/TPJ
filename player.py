@@ -35,9 +35,9 @@ class Player(Actor):
         self.observer.subscribe(CheckCollision, self)
 
         # Collision Set up
-        self.collision_box = CollisionCircle(self, self.observer, center=self.rect.center, radius=50)
+        self.collision_box = CollisionCircle(self, self.observer, center=(49, 49), radius=50)
         self.collision_box.set_enter_func(self.damage_taken)
-        
+        print(self.rect.center)
         self.center = (49, 49)
 
         self.prev_frame = -10

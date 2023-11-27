@@ -94,7 +94,8 @@ class CollisionCircle(Collision):
 
 
     def move(self):
-        self.circle.rect.center = (self.parent.position[0]+self.center[0], self.parent.position[1]+self.center[1])
+        #self.circle.rect.center = (self.parent.position[0]+self.center[0], self.parent.position[1]+self.center[1])
+        self.circle.rect.center = (self.parent.position[0], self.parent.position[1])
 
     def check_collision(self):
         collide = pygame.sprite.spritecollide(self.circle, collision_group, False, pygame.sprite.collide_circle)
