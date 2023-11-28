@@ -7,8 +7,9 @@ from collision import *
 import math
 from bullet import Bullet
 
-AccelerateMAX = 20
-BrakeMAX = -10
+AccelerateMAX = 10
+BrakeMAX = -5
+SHOOTING_COOLDOWN = 5
 
 display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 
@@ -33,16 +34,13 @@ class Player(Actor):
         self.observer.subscribe(Update, self)
         self.observer.subscribe(CheckCollision, self)
 
+        # Collision Set up
         self.collision_box = CollisionCircle(self, self.observer, center=self.rect.center, radius=50)
         self.collision_box.set_enter_func(self.damage_taken)
-
-        # # draw circle
-        # self.circle = pygame.sprite.Sprite()
-        # self.circle.image  = pygame.Surface((99, 99), pygame.SRCALPHA)
-        # pygame.draw.circle(self.circle.image, (255, 255, 0, 128), self.rect.center, 50)
         
-        self.test_angle = 0
         self.center = (49, 49)
+
+        self.prev_frame = -10
 
     def accelerate(self):
         self.velocity += 1 if self.velocity < AccelerateMAX else 0
@@ -78,10 +76,14 @@ class Player(Actor):
             self.collision_box = self.collision_box.delete()
             self.observer.notify(Quit)
 
-    def shoot(self):
-        bullet = Bullet(self.observer, self.direction, self.position)
-        print("shooting")
-    
+    def shoot(self, frame=0):
+        print("Shoot on frame", frame, frame-self.prev_frame)
+        if frame - self.prev_frame > SHOOTING_COOLDOWN:
+            self.prev_frame = frame
+            x = self.position[0] + math.cos(self.direction) * 75
+            y = self.position[1] + math.sin(self.direction) * 75
+            print("Shooting at", x, y)
+            Bullet(self.observer, self.direction, [x,y])    
 
     def rotate(self):
         image = self.sprite.get_sprite()
@@ -109,29 +111,13 @@ class Player(Actor):
         return rotated_image, rotated_image_rect
 
     def display(self):
-        #self.rotate()
-        self.test_angle += 2
-        #self.sprite.update_sprite(img=pygame.transform.rotate(self.sprite.get_sprite(), int(self.test_angle)%360))
 
-        img, rect = self.rotate()#blitRotate(self.sprite.get_sprite(), self.position, (49,49), self.test_angle)
-        self.rect = self.sprite.get_sprite().get_rect()
-        display.blit(img, rect)
-        #self.sprite.display_sprite(self.position[0] + self.rect[0], self.position[1] + self.rect[1])
-        # display.blit(self.circle.image, (self.position[0]-49, self.position[1]-49))
-
-
-        
-        
+        img, rect = self.rotate()
+        # self.rect = self.sprite.get_sprite().get_rect()
+        display.blit(img, rect)      
     
     def damage_taken(self):
         print(f"Damage taken, Lives {self.lives}")
         self.lives -= 1
         if self.lives == 0:
             self.delete = True
-    
-    
-
-
-
-    # def updatedir(self, dir):
-    #     super().updatedir(dir)

@@ -6,6 +6,7 @@ from signals import *
 from player import Player
 from game_vars import SCALE, WIDTH, HEIGHT
 from asteroids import Asteroid
+from enemy import Enemy
 
 
 class MainLoop():
@@ -39,6 +40,7 @@ class MainLoop():
             self.obs.notify(Move)
             self.obs.notify(CheckCollision)
             self.obs.notify(Update)
+            self.obs.notify(EnemyShoot)
             self.obs.notify(Display) # Update all sprites
             # update window
             pygame.display.flip()
@@ -46,6 +48,7 @@ class MainLoop():
 
             if (frame % 30) == 0:
                 Asteroid.factory(self.obs)
+                Enemy.factory(self.obs)
 
             frame += 1
 

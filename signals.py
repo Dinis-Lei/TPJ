@@ -41,3 +41,7 @@ class Update(Signal):
 class CheckCollision(Signal):
     def execute(listener, **kwargs):
         listener.check_collision(**kwargs)
+
+class EnemyShoot(Signal):
+    def execute(listener, **kwargs):
+        listener.enemy_shoot()
