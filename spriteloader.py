@@ -91,9 +91,17 @@ class EnemySprite(SpriteLoader):
 class CollisionSprite(SpriteLoader):
     def __init__(self, width, height) -> None:
         super().__init__()
-        self.surface = pygame.Surface((SCALE*width, SCALE*height))
-        self.surface.set_alpha(128)
-        self.surface.fill("blue")
+        self.sprite = pygame.sprite.Sprite()
+        surface = pygame.Surface((SCALE*width, SCALE*height))
+        surface.set_alpha(128)
+        surface.fill("yellow")
+        self.sprite = surface
 
-    def display_sprite(self, x, y):
-        display.blit(self.surface, (x, y))
+    def display_sprite(self, rect):
+        super().display_sprite(rect=rect)
+
+    def get_sprite(self):
+        return self.sprite
+    
+    def update_sprite(self, img=None):
+        self.sprite.image = img

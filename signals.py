@@ -20,7 +20,7 @@ class Brake(Signal):
 
 class Shoot(Signal):
     def execute(listener, **kwargs):
-        listener.shoot()
+        listener.shoot(frame=kwargs["frame"])
 
 class Pause(Signal):
     def execute(listener, **kwargs):
@@ -45,3 +45,4 @@ class CheckCollision(Signal):
 class EnemyShoot(Signal):
     def execute(listener, **kwargs):
         listener.enemy_shoot()
+    

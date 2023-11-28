@@ -4,7 +4,7 @@ from signals import Display
 class Actor:
     def __init__(self, position, sprite: SpriteLoader) -> None:
         self.direction = (0, 0)
-        self.position = position
+        self.position : list = position
         self.sprite = sprite
 
     

@@ -29,13 +29,14 @@ class MainLoop():
         print("Starting game")
         frame = 0
         player = Player(self.obs)
+        self.running = True
         
 
         while self.running:
             self.display.fill("white")
             commands = self.input_handler.handle_input()
             for command in commands:
-                self.obs.notify(command)
+                self.obs.notify(command, frame=frame)
             #print(f"Frame: {frame}")
             self.obs.notify(Move)
             self.obs.notify(CheckCollision)
@@ -48,7 +49,7 @@ class MainLoop():
 
             if (frame % 30) == 0:
                 Asteroid.factory(self.obs)
-                Enemy.factory(self.obs)
+                Enemy.factory(self.obs, player)
 
             frame += 1
 

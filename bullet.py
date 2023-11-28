@@ -3,7 +3,7 @@ from actor import Actor
 from observer import Observer
 import math
 from signals import Display, Move, Update
-
+from game_vars import *
 from collision import CollisionCircle
 from spriteloader import BulletSprite
 
@@ -18,7 +18,6 @@ class Bullet(Actor):
         self.observer = observer
 
         self.observer.subscribe(Display, self)
-        print("AAAAAAAAAA")
         self.observer.subscribe(Move, self)
         self.observer.subscribe(Update, self)
 
@@ -57,8 +56,13 @@ class Bullet(Actor):
         self.position[1] += math.sin(self.direction) * self.velocity
 
         self.collision_box.move()
+    
+    def check_bounds(self):
+        if not 0 < self.position[0] < WIDTH*SCALE or not 0 < self.position[1] < HEIGHT*SCALE:
+            self.delete = True
 
     def update(self):
+        self.check_bounds()
         if self.delete:
             self.observer.unsubscribe(Display, self)
             self.observer.unsubscribe(Move, self)

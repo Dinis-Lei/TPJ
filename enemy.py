@@ -68,27 +68,33 @@ class Enemy(Actor):
     #         self.i = 0
     #     else: 
     #         self.i += 1
+    def check_bounds(self):
+        if not 0 <= self.position[0] <= WIDTH*SCALE or not 0 <= self.position[1] <= HEIGHT*SCALE:
+            self.delete = True
 
     def update(self):
+        self.check_bounds()
         if self.delete:
             self.observer.unsubscribe(Display, self)
             self.observer.unsubscribe(Update, self)
             self.observer.unsubscribe(Move, self)
-            self.observer.unsubscribe(EnemyShoot, self)
+            #self.observer.unsubscribe(EnemyShoot, self)
             self.observer.unsubscribe(CheckCollision, self)
             self.collision_box = self.collision_box.delete()
 
     @classmethod
-    def factory(cls, observer: Observer):
+    def factory(cls, observer: Observer, player):
         print("Entered enemy factory")
         direction = math.radians(random.randint(0,360))
         print(direction)
         velocity = random.randint(1,3)
         a = random.randint(1,5)
         if a <= 4:
-            return EnemyLinear(observer, direction, velocity)
+            pass
+            #return EnemyLinear(observer, direction, velocity)
         else:
-            return EnemyCrazy(observer, direction, velocity)
+            print("Enemy Crazy Created")
+            return EnemyCrazy(observer, player, direction, velocity)
     
     def getInitialPosition(self, direction):
         if math.pi/4 < direction <= math.pi*3/4:
@@ -112,6 +118,9 @@ class EnemyLinear(Enemy):
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
         self.collision_box.move()
+    
+    def update(self):
+        super().update()
 
     def display(self):
         img, rect = super().rotate()#blitRotate(self.sprite.get_sprite(), self.position, (49,49), self.test_angle)
@@ -120,28 +129,32 @@ class EnemyLinear(Enemy):
 
 
 class EnemyCrazy(Enemy):
-    def __init__(self, observer: Observer, direction = 0, velocity = 1) -> None:
-        self.direction = direction
-        self.position = super().getInitialPosition(direction=self.direction)
-        
-        self.velocity = velocity
-        self.sprite = EnemySprite("enemy.png")
-        self.fire_interval = 0
-        self.observer = observer
-        #super.__init__(observer, self.direction, self.velocity)
+    def __init__(self, observer: Observer, player, direction = 0, velocity = 1) -> None:
+        self.posPlayer = player.position
+        self.position = super().getInitialPosition(direction=direction)
+        self.fire_interval = random.randint(1,4)
+        super().__init__(observer, direction, velocity, self.position, self.fire_interval)
 
     def move(self):
         """ Enemy movement pattern """
+        self.calculate_angle()
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
+        self.collision_box.move()
     
-    def calculate_angle(self, posPlayer):
-        x = posPlayer[0] - self.position[0]
-        y = posPlayer[1] - self.position[1]
+    def calculate_angle(self):
+        x = self.posPlayer[0] - self.position[0]
+        y = self.posPlayer[1] - self.position[1]
         if x != 0:
-            self.direction += math.atan(y/x)
-        
+            if x<0:
+                self.direction = math.atan(y/x) + math.pi
+            else:
+                self.direction = math.atan(y/x)
 
     def update(self):
-        """ Update sprite """
-        pass
+        super().update()
+    
+    def display(self):
+        img, rect = super().rotate()#blitRotate(self.sprite.get_sprite(), self.position, (49,49), self.test_angle)
+        self.rect = self.sprite.get_sprite().get_rect()
+        display.blit(img, rect)
