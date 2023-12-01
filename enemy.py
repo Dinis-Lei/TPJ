@@ -6,6 +6,7 @@ from actor import Actor
 from observer import Observer
 from collision import CollisionCircle
 from bullet import Bullet
+from service_locator import ServiceLocator
 from spriteloader import EnemySprite
 from game_vars import *
 from signals import *
@@ -13,24 +14,28 @@ from signals import *
 display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 
 class Enemy(Actor):
-    def __init__(self, observer: Observer, direction = 0, velocity = 1,  position = [0,0], fire_interval = 3)  -> None:
+    def __init__(self, direction = 0, velocity = 1,  position = [0,0], fire_interval = 3)  -> None:
         self.direction = direction
         self.velocity = velocity
         self.position = position
         self.sprite = EnemySprite("enemy.png")
         self.fire_interval = fire_interval
-        self.observer = observer
-        self.lives = 3
+        self.serv_locator = ServiceLocator.create()
+        self.observer = self.serv_locator.get_observer()
+        self.lives = 1
         self.i = 0
         self.delete = False
         self.rect = self.sprite.get_sprite().get_rect()
+        
+        # Subscribe to events
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Update, self)
         self.observer.subscribe(Move, self)
         #self.observer.subscribe(EnemyShoot, self)
         self.observer.subscribe(CheckCollision, self)
 
-        self.collision_box = CollisionCircle(self, self.observer, center=self.rect.center, radius=50)
+        # Collision Set up
+        self.collision_box = CollisionCircle(self, center=self.rect.center, radius=50)
         self.collision_box.set_enter_func(self.damage_taken)
         self.center = (49, 49)
 
@@ -83,18 +88,18 @@ class Enemy(Actor):
             self.collision_box = self.collision_box.delete()
 
     @classmethod
-    def factory(cls, observer: Observer, player):
+    def factory(cls, player):
         print("Entered enemy factory")
         direction = math.radians(random.randint(0,360))
         print(direction)
-        velocity = random.randint(1,3)
+        velocity = random.randint(2,5)
         a = random.randint(1,5)
         if a <= 4:
             pass
             #return EnemyLinear(observer, direction, velocity)
         else:
             print("Enemy Crazy Created")
-            return EnemyCrazy(observer, player, direction, velocity)
+            return EnemyCrazy(player, direction, velocity)
     
     def getInitialPosition(self, direction):
         if math.pi/4 < direction <= math.pi*3/4:
@@ -105,12 +110,17 @@ class Enemy(Actor):
             return [random.randint(0,WIDTH*SCALE),HEIGHT*SCALE]
         else:
             return [0,random.randint(0,HEIGHT*SCALE)]
+        
+    def display(self):
+        img, rect = self.rotate()
+        # self.rect = self.sprite.get_sprite().get_rect()
+        display.blit(img, rect)
 
 class EnemyLinear(Enemy):
-    def __init__(self, observer: Observer, direction = 0, velocity = 1) -> None:
+    def __init__(self, direction = 0, velocity = 1) -> None:
         self.position = super().getInitialPosition(direction=direction)
         self.fire_interval = random.randint(1,4)
-        super().__init__(observer, direction, velocity, self.position, self.fire_interval)
+        super().__init__( direction, velocity, self.position, self.fire_interval)
         
 
     def move(self):
@@ -118,22 +128,14 @@ class EnemyLinear(Enemy):
         self.position[0] += math.cos(self.direction) * self.velocity
         self.position[1] += math.sin(self.direction) * self.velocity
         self.collision_box.move()
-    
-    def update(self):
-        super().update()
-
-    def display(self):
-        img, rect = super().rotate()#blitRotate(self.sprite.get_sprite(), self.position, (49,49), self.test_angle)
-        self.rect = self.sprite.get_sprite().get_rect()
-        display.blit(img, rect)
 
 
 class EnemyCrazy(Enemy):
-    def __init__(self, observer: Observer, player, direction = 0, velocity = 1) -> None:
+    def __init__(self, player, direction = 0, velocity = 1) -> None:
         self.posPlayer = player.position
         self.position = super().getInitialPosition(direction=direction)
         self.fire_interval = random.randint(1,4)
-        super().__init__(observer, direction, velocity, self.position, self.fire_interval)
+        super().__init__(direction, velocity, self.position, self.fire_interval)
 
     def move(self):
         """ Enemy movement pattern """
@@ -150,11 +152,3 @@ class EnemyCrazy(Enemy):
                 self.direction = math.atan(y/x) + math.pi
             else:
                 self.direction = math.atan(y/x)
-
-    def update(self):
-        super().update()
-    
-    def display(self):
-        img, rect = super().rotate()#blitRotate(self.sprite.get_sprite(), self.position, (49,49), self.test_angle)
-        self.rect = self.sprite.get_sprite().get_rect()
-        display.blit(img, rect)

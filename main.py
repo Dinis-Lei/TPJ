@@ -2,6 +2,7 @@ import pygame
 import pygame_menu
 from input_handler import InputHandler
 from observer import Observer
+from service_locator import ServiceLocator
 from signals import *
 from player import Player
 from game_vars import SCALE, WIDTH, HEIGHT
@@ -16,7 +17,8 @@ class MainLoop():
         self.display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 
         self.input_handler = InputHandler()
-        self.obs = Observer()
+        self.serv_loc = ServiceLocator.create()
+        self.obs = self.serv_loc.get_observer()
         self.clock = pygame.time.Clock()
         self.running = True
 
@@ -28,7 +30,7 @@ class MainLoop():
     def run(self):
         print("Starting game")
         frame = 0
-        player = Player(self.obs)
+        player = Player()
         self.running = True
         
 
@@ -48,8 +50,8 @@ class MainLoop():
             self.clock.tick(15)
 
             if (frame % 30) == 0:
-                Asteroid.factory(self.obs)
-                Enemy.factory(self.obs, player)
+                Asteroid.factory()
+                Enemy.factory(player)
 
             frame += 1
 

@@ -1,4 +1,5 @@
 from observer import Observer
+from service_locator import ServiceLocator
 from signals import *
 from spriteloader import CollisionSprite
 from actor import Actor
@@ -12,8 +13,8 @@ collision_group = pygame.sprite.Group()
 
 class Collision():
 
-    def __init__(self, parent: Actor, observer: Observer) -> None:
-        self.obs = observer
+    def __init__(self, parent: Actor) -> None:
+        self.obs = ServiceLocator.create().get_observer()
         self.parent = parent
 
         self.obs.subscribe(Display, self)
@@ -32,8 +33,8 @@ class Collision():
 
 class CollisionBox(Collision):
 
-    def __init__(self, actor: Actor, observer: Observer, width, height, direction) -> None:
-        super().__init__(actor, observer)
+    def __init__(self, actor: Actor, width, height, direction) -> None:
+        super().__init__(actor)
 
         self.width = width
         self.height = height
@@ -69,8 +70,8 @@ class CollisionBox(Collision):
 
 class CollisionCircle(Collision):
 
-    def __init__(self, actor: Actor, observer: Observer, center, radius) -> None:
-        super().__init__(actor, observer)
+    def __init__(self, actor: Actor, center, radius) -> None:
+        super().__init__(actor)
         self.center = center
         self.radius = radius
         self.id = id(self)
@@ -79,8 +80,8 @@ class CollisionCircle(Collision):
         self.circle = pygame.sprite.Sprite()
         self.circle.image  = pygame.Surface((self.radius*SCALE, self.radius*SCALE), pygame.SRCALPHA)
         pygame.draw.circle(self.circle.image, (255, 255, 0, 128) if DEBUG_COLLISION else (0,0,0,0) , self.center, self.radius)
-        self.circle.rect = pygame.Rect(self.parent.position[0] + self.center[0], 
-                                       self.parent.position[1] + self.center[1], 0, 0)
+        self.circle.rect = pygame.Rect(self.parent.position[0], 
+                                       self.parent.position[1], 0, 0)
         self.circle.radius = self.radius
 
         collision_group.add(self.circle)

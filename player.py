@@ -1,6 +1,5 @@
 import pygame
 from actor import Actor
-from observer import Observer
 from signals import *
 from spriteloader import PlayerSprite
 from collision import *
@@ -14,7 +13,7 @@ SHOOTING_COOLDOWN = 5
 display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 
 class Player(Actor):
-    def __init__(self, observer: Observer) -> None:
+    def __init__(self) -> None:
         super().__init__([400,200], PlayerSprite("player3(1).png"))
         self.direction = -math.pi/2
         self.pivot = [40,57]
@@ -22,7 +21,8 @@ class Player(Actor):
         self.lives = 100
         self.offset = pygame.math.Vector2(30, 0)
         self.rect = self.sprite.get_sprite().get_rect()
-        self.observer = observer
+        self.serv_loc = ServiceLocator.create()
+        self.observer = self.serv_loc.get_observer()
         self.delete = False
 
         # Subscribe to events
@@ -35,9 +35,8 @@ class Player(Actor):
         self.observer.subscribe(CheckCollision, self)
 
         # Collision Set up
-        self.collision_box = CollisionCircle(self, self.observer, center=self.rect.center, radius=50)
+        self.collision_box = CollisionCircle(self, center=self.rect.center, radius=50)
         self.collision_box.set_enter_func(self.damage_taken)
-        
         self.center = (49, 49)
 
         self.prev_frame = -10
@@ -77,13 +76,11 @@ class Player(Actor):
             self.observer.notify(Quit)
 
     def shoot(self, frame=0):
-        print("Shoot on frame", frame, frame-self.prev_frame)
         if frame - self.prev_frame > SHOOTING_COOLDOWN:
             self.prev_frame = frame
             x = self.position[0] + math.cos(self.direction) * 75
             y = self.position[1] + math.sin(self.direction) * 75
-            print("Shooting at", x, y)
-            Bullet(self.observer, self.direction, [x,y])    
+            Bullet(self.direction, [x,y])    
 
     def rotate(self):
         image = self.sprite.get_sprite()
@@ -111,9 +108,7 @@ class Player(Actor):
         return rotated_image, rotated_image_rect
 
     def display(self):
-
         img, rect = self.rotate()
-        # self.rect = self.sprite.get_sprite().get_rect()
         display.blit(img, rect)      
     
     def damage_taken(self):

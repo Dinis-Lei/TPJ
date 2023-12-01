@@ -2,20 +2,21 @@ import pygame
 from actor import Actor
 from observer import Observer
 import math
+from service_locator import ServiceLocator
 from signals import Display, Move, Update
 from game_vars import *
 from collision import CollisionCircle
 from spriteloader import BulletSprite
 
 class Bullet(Actor):
-    def __init__(self, observer: Observer, direction, position) -> None:
-        print(direction)
+    def __init__(self, direction, position) -> None:
+        self.serv_loc = ServiceLocator.create()
         self.direction = direction     # direction angle
         self.position = position
         self.center = (5,5)
         self.velocity = 15
         self.sprite = BulletSprite("bullet.png")
-        self.observer = observer
+        self.observer = self.serv_loc.get_observer()
 
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
@@ -24,12 +25,12 @@ class Bullet(Actor):
         rotated_img, self.rotated_rect = self.rotate()
         self.sprite.update_sprite(rotated_img)
 
-        self.collision_box = CollisionCircle(self, self.observer, center=self.center, radius=5)
+        self.collision_box = CollisionCircle(self, center=self.center, radius=5)
         self.collision_box.set_enter_func(self.hit)
         self.delete = False
 
     def hit(self):
-        #self.delete = True
+        self.delete = True
         pass
 
     def rotate(self):
@@ -58,7 +59,7 @@ class Bullet(Actor):
         self.collision_box.move()
     
     def check_bounds(self):
-        if not 0 < self.position[0] < WIDTH*SCALE or not 0 < self.position[1] < HEIGHT*SCALE:
+        if not -100 < self.position[0] < WIDTH*SCALE+100 or not -100 < self.position[1] < HEIGHT*SCALE+100:
             self.delete = True
 
     def update(self):
@@ -70,7 +71,6 @@ class Bullet(Actor):
             self.collision_box = self.collision_box.delete()
     
     def display(self):
-        print("displaying bullet")
         img, rect = self.rotate()
         self.sprite.update_sprite(img)
         self.sprite.display_sprite(rect)
