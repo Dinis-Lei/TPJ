@@ -1,7 +1,10 @@
 import pygame
+from pygame import image
 import pygame_menu
+from hud import HUD
 from input_handler import InputHandler
 from observer import Observer
+from spriteloader import SpriteLoader
 from service_locator import ServiceLocator
 from signals import *
 from player import Player
@@ -28,14 +31,16 @@ class MainLoop():
         self.running = False
 
     def run(self):
+        HUD()
         print("Starting game")
         frame = 0
         player = Player()
         self.running = True
-        
+        background = image.load(f"./usedAssets/blue.png")
+        background = pygame.transform.scale(background,(WIDTH*SCALE,HEIGHT*SCALE))
 
         while self.running:
-            self.display.fill("white")
+            self.display.blit(background, (0,0))
             commands = self.input_handler.handle_input()
             for command in commands:
                 self.obs.notify(command, frame=frame)

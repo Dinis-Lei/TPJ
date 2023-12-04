@@ -89,9 +89,7 @@ class Enemy(Actor):
 
     @classmethod
     def factory(cls, player):
-        print("Entered enemy factory")
         direction = math.radians(random.randint(0,360))
-        print(direction)
         velocity = random.randint(2,5)
         a = random.randint(1,5)
         if a <= 4:
@@ -120,6 +118,7 @@ class EnemyLinear(Enemy):
     def __init__(self, direction = 0, velocity = 1) -> None:
         self.position = super().getInitialPosition(direction=direction)
         self.fire_interval = random.randint(1,4)
+        self.score = 3
         super().__init__( direction, velocity, self.position, self.fire_interval)
         
 
@@ -135,6 +134,7 @@ class EnemyCrazy(Enemy):
         self.posPlayer = player.position
         self.position = super().getInitialPosition(direction=direction)
         self.fire_interval = random.randint(1,4)
+        self.score = 4
         super().__init__(direction, velocity, self.position, self.fire_interval)
 
     def move(self):

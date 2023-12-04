@@ -18,7 +18,7 @@ class Player(Actor):
         self.direction = -math.pi/2
         self.pivot = [40,57]
         self.velocity = 0
-        self.lives = 100
+        self.lives = 3
         self.offset = pygame.math.Vector2(30, 0)
         self.rect = self.sprite.get_sprite().get_rect()
         self.serv_loc = ServiceLocator.create()
@@ -114,5 +114,6 @@ class Player(Actor):
     def damage_taken(self):
         print(f"Damage taken, Lives {self.lives}")
         self.lives -= 1
+        self.observer.notify(UpdateLives, lives = self.lives)
         if self.lives == 0:
             self.delete = True

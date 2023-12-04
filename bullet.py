@@ -31,7 +31,7 @@ class Bullet(Actor):
 
     def hit(self):
         self.delete = True
-        pass
+        
 
     def rotate(self):
         image = self.sprite.get_sprite()
