@@ -41,43 +41,25 @@ class Enemy(Actor):
 
     def check_collision(self):
         self.collision_box.check_collision()
-
-    def rotate(self):
-        image = self.sprite.get_sprite()
-
-        # offset from pivot to center
-        image_rect = image.get_rect(topleft = (self.position[0] - self.center[0], self.position[1]-self.center[1]))
-        offset_center_to_pivot = pygame.math.Vector2(self.position) - image_rect.center
-        # roatated offset from pivot to center
-        rotated_offset = offset_center_to_pivot.rotate(-int(-self.direction*180/math.pi-90)%360)
-
-        # rotated image center
-        rotated_image_center = (self.position[0] - rotated_offset.x, self.position[1] - rotated_offset.y)
-
-        # get a rotated image
-        rotated_image = pygame.transform.rotate(image, int(-self.direction*180/math.pi-90)%360)
-        rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
-
-        return rotated_image, rotated_image_rect
     
-    def damage_taken(self):
+    def damage_taken(self, collider=None):
         self.lives -= 1
         print(f"Damage taken, Lives {self.lives}")
         if self.lives == 0:
             self.delete = True
     
     def enemy_shoot(self):
-        print("Enemy shooting you")
         if self.i == self.fire_interval:
 
             x = self.position[0] + math.cos(self.direction) * 75
             y = self.position[1] + math.sin(self.direction) * 75
             Bullet(self.direction, [x,y])  
+            self.serv_locator.get_sound_manager().play("laser2")
             self.i = 0
         else: 
             self.i += 1
     def check_bounds(self):
-        if not 0 <= self.position[0] <= WIDTH*SCALE or not 0 <= self.position[1] <= HEIGHT*SCALE:
+        if not -200 <= self.position[0] <= WIDTH*SCALE+200 or not -200 <= self.position[1] <= HEIGHT*SCALE+200:
             self.delete = True
 
     def update(self):
@@ -91,8 +73,7 @@ class Enemy(Actor):
             self.collision_box = self.collision_box.delete()
 
     @classmethod
-    def factory(cls, player):
-        print("Entered enemy factory")
+    def create(cls, player):
         direction = math.radians(random.randint(0,360))
         print(direction)
         velocity = random.randint(2,5)
@@ -105,13 +86,13 @@ class Enemy(Actor):
     
     def getInitialPosition(self, direction):
         if math.pi/4 < direction <= math.pi*3/4:
-            return [random.randint(0,WIDTH*SCALE),0]
+            return [random.randint(0,WIDTH*SCALE),-100]
         elif math.pi*3/4 < direction <= math.pi*5/4:
-            return [WIDTH*SCALE,random.randint(0,WIDTH*SCALE)]
+            return [WIDTH*SCALE+100,random.randint(0,WIDTH*SCALE)]
         elif math.pi*5/4 < direction <= math.pi*7/4:
-            return [random.randint(0,WIDTH*SCALE),HEIGHT*SCALE]
+            return [random.randint(0,WIDTH*SCALE),HEIGHT*SCALE+100]
         else:
-            return [0,random.randint(0,HEIGHT*SCALE)]
+            return [-100,random.randint(0,HEIGHT*SCALE)]
         
     def display(self):
         img, rect = self.rotate()
@@ -121,7 +102,7 @@ class Enemy(Actor):
 class EnemyLinear(Enemy):
     def __init__(self, direction = 0, velocity = 1) -> None:
         self.position = super().getInitialPosition(direction=direction)
-        self.fire_interval = random.randint(1,4)
+        self.fire_interval = random.randint(15,30)
         super().__init__( direction, velocity, self.position, self.fire_interval)
         
 
@@ -136,7 +117,7 @@ class EnemyCrazy(Enemy):
     def __init__(self, player, direction = 0, velocity = 1) -> None:
         self.posPlayer = player.position
         self.position = super().getInitialPosition(direction=direction)
-        self.fire_interval = random.randint(1,4)
+        self.fire_interval = random.randint(7,15)
         super().__init__(direction, velocity, self.position, self.fire_interval)
 
     def move(self):

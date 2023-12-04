@@ -2,7 +2,6 @@ from observer import Observer
 from soundManager import SoundManager
 
 class ServiceLocator():
-
     _instance = None
     observer = None
     sound_manager = None

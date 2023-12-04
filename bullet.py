@@ -9,10 +9,11 @@ from collision import CollisionCircle
 from spriteloader import BulletSprite
 
 class Bullet(Actor):
-    def __init__(self, direction, position) -> None:
+    def __init__(self, direction, position, from_player=False) -> None:
         self.serv_loc = ServiceLocator.create()
         self.direction = direction     # direction angle
         self.position = position
+        self.from_player = from_player
         self.center = (5,5)
         self.velocity = 15
         self.sprite = BulletSprite("bullet.png")
@@ -25,30 +26,12 @@ class Bullet(Actor):
         rotated_img, self.rotated_rect = self.rotate()
         self.sprite.update_sprite(rotated_img)
 
-        self.collision_box = CollisionCircle(self, center=self.center, radius=5)
+        self.collision_box = CollisionCircle(self, center=self.center, radius=5, id="player_bullet" if from_player else "enemy_bullet")
         self.collision_box.set_enter_func(self.hit)
         self.delete = False
 
-    def hit(self):
+    def hit(self, collider=None):
         self.delete = True
-        pass
-
-    def rotate(self):
-        image = self.sprite.get_sprite()
-        # offset from pivot to center
-        image_rect = image.get_rect(topleft = (self.position[0] - self.center[0], self.position[1]-self.center[1]))
-        offset_center_to_pivot = pygame.math.Vector2(self.position) - image_rect.center
-        # roatated offset from pivot to center
-        rotated_offset = offset_center_to_pivot.rotate(-int(-self.direction*180/math.pi-90)%360)
-
-        # rotated image center
-        rotated_image_center = (self.position[0] - rotated_offset.x, self.position[1] - rotated_offset.y)
-
-        # get a rotated image
-        rotated_image = pygame.transform.rotate(image, int(-self.direction*180/math.pi-90)%360)
-        rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
-
-        return rotated_image, rotated_image_rect
 
 
     def move(self):

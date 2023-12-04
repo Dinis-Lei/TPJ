@@ -29,7 +29,7 @@ class Asteroid(Actor):
         self.observer.subscribe(Move, self)
         self.observer.subscribe(Update, self)
 
-    def hit_object(self):
+    def hit_object(self, collider=None):
         self.delete = True
 
     def move(self):
@@ -59,7 +59,7 @@ class Asteroid(Actor):
     
 
     @classmethod
-    def factory(cls):
+    def create(cls):
         """ Normal asteroid factory """
 
         direction = math.radians(random.randint(0,359))

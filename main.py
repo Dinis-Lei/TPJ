@@ -44,6 +44,7 @@ class MainLoop():
             #print(f"Frame: {frame}")
             self.obs.notify(Move)
             self.obs.notify(CheckCollision)
+            self.obs.notify(EnemyShoot)
             self.obs.notify(Update)
             self.obs.notify(Display) # Update all sprites
             # update window
@@ -51,8 +52,8 @@ class MainLoop():
             self.clock.tick(15)
 
             if (frame % 30) == 0:
-                Asteroid.factory()
-                Enemy.factory(player)
+                Asteroid.create()
+                Enemy.create(player)
 
             frame += 1
 

@@ -10,8 +10,11 @@ import pygame
 
 display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 collision_group = pygame.sprite.Group()
+collision_id = dict()
 
 class Collision():
+
+    """ """
 
     def __init__(self, parent: Actor) -> None:
         self.obs = ServiceLocator.create().get_observer()
@@ -70,11 +73,10 @@ class CollisionBox(Collision):
 
 class CollisionCircle(Collision):
 
-    def __init__(self, actor: Actor, center, radius) -> None:
+    def __init__(self, actor: Actor, center, radius, id=None) -> None:
         super().__init__(actor)
         self.center = center
         self.radius = radius
-        self.id = id(self)
         self.is_colliding = False
 
         self.circle = pygame.sprite.Sprite()
@@ -85,6 +87,7 @@ class CollisionCircle(Collision):
         self.circle.radius = self.radius
 
         collision_group.add(self.circle)
+        collision_id[self.circle] = id
 
 
     def set_enter_func(self, func):
@@ -102,7 +105,8 @@ class CollisionCircle(Collision):
         collide = pygame.sprite.spritecollide(self.circle, collision_group, False, pygame.sprite.collide_circle)
 
         if len(collide) > 1 and not self.is_colliding:
-            self.enter_func()
+            collider_id = collision_id[[c for c in collide if c != self.circle][0]]
+            self.enter_func(collider = collider_id)
             self.is_colliding = True
         elif len(collide) < 2:
             self.is_colliding = False
@@ -114,3 +118,4 @@ class CollisionCircle(Collision):
     def delete(self):
         super().delete()
         collision_group.remove(self.circle)
+        collision_id.pop(self.circle)

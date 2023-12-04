@@ -35,7 +35,7 @@ class Player(Actor):
         self.observer.subscribe(CheckCollision, self)
 
         # Collision Set up
-        self.collision_box = CollisionCircle(self, center=self.rect.center, radius=50)
+        self.collision_box = CollisionCircle(self, center=self.rect.center, radius=50, id="player")
         self.collision_box.set_enter_func(self.damage_taken)
         self.center = (49, 49)
 
@@ -83,9 +83,7 @@ class Player(Actor):
             Bullet(self.direction, [x,y])    
             self.serv_loc.get_sound_manager().play("laser1", volume=1)
 
-    def rotate(self):
-        image = self.sprite.get_sprite()
-
+    def update_direction(self):
         x = pygame.mouse.get_pos()[0] - self.position[0]
         y = pygame.mouse.get_pos()[1] - self.position[1]
 
@@ -93,26 +91,12 @@ class Player(Actor):
         if abs(self.direction-new_direction) > 5*math.pi/180:
             self.direction = new_direction
 
-        # offset from pivot to center
-        image_rect = image.get_rect(topleft = (self.position[0] - self.center[0], self.position[1]-self.center[1]))
-        offset_center_to_pivot = pygame.math.Vector2(self.position) - image_rect.center
-        # roatated offset from pivot to center
-        rotated_offset = offset_center_to_pivot.rotate(-int(-self.direction*180/math.pi-90)%360)
-
-        # rotated image center
-        rotated_image_center = (self.position[0] - rotated_offset.x, self.position[1] - rotated_offset.y)
-
-        # get a rotated image
-        rotated_image = pygame.transform.rotate(image, int(-self.direction*180/math.pi-90)%360)
-        rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
-
-        return rotated_image, rotated_image_rect
-
     def display(self):
+        self.update_direction()
         img, rect = self.rotate()
         display.blit(img, rect)      
     
-    def damage_taken(self):
+    def damage_taken(self, collider=None):
         print(f"Damage taken, Lives {self.lives}")
         self.lives -= 1
         if self.lives == 0:
