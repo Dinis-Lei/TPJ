@@ -24,7 +24,7 @@ class SoundManager:
             "zap": self.mixer.Sound("./usedAssets/sounds/sfx_zap.ogg"),
         }
 
-    def play(self, sound:str, loop:bool=False, volume:float=0.1) -> None:
+    def play(self, sound:str, loops:int=0, volume:float=0.1) -> None:
         """
         Plays a sound
 
@@ -37,15 +37,10 @@ class SoundManager:
             None
         """
         self.mixer.Sound("./usedAssets/sounds/sfx_twoTone.ogg").play()
-        print("Play")
         #find an unused channel
         channel = self.mixer.find_channel()
         if channel:
             self.sounds[sound].set_volume(volume)
-            if loop:
-                channel.play(self.sounds[sound], -1)
-
-            else:
-                channel.play(self.sounds[sound]) 
+            channel.play(self.sounds[sound], loops=loops) 
 
         

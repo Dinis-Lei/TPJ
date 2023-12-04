@@ -18,6 +18,8 @@ class Enemy(Actor):
         self.direction = direction
         self.velocity = velocity
         self.position = position
+        self.id = id(self)
+
         self.sprite = EnemySprite("enemy.png")
         self.fire_interval = fire_interval
         self.serv_locator = ServiceLocator.create()
@@ -35,7 +37,7 @@ class Enemy(Actor):
         self.observer.subscribe(CheckCollision, self)
 
         # Collision Set up
-        self.collision_box = CollisionCircle(self, center=self.rect.center, radius=50)
+        self.collision_box = CollisionCircle(self, center=self.rect.center, radius=50, id=self.id)
         self.collision_box.set_enter_func(self.damage_taken)
         self.center = (49, 49)
 
@@ -43,8 +45,12 @@ class Enemy(Actor):
         self.collision_box.check_collision()
     
     def damage_taken(self, collider=None):
+        if collider == f"{self.id}_bullet":
+            return
+        elif collider == "player_bullet":
+            self.observer.notify(UpdateScore, score=10)
+
         self.lives -= 1
-        print(f"Damage taken, Lives {self.lives}")
         if self.lives == 0:
             self.delete = True
     
@@ -53,7 +59,7 @@ class Enemy(Actor):
 
             x = self.position[0] + math.cos(self.direction) * 75
             y = self.position[1] + math.sin(self.direction) * 75
-            Bullet(self.direction, [x,y])  
+            Bullet(self.direction, [x,y], creator_id=self.id)  
             self.serv_locator.get_sound_manager().play("laser2")
             self.i = 0
         else: 
@@ -75,13 +81,11 @@ class Enemy(Actor):
     @classmethod
     def create(cls, player):
         direction = math.radians(random.randint(0,360))
-        print(direction)
         velocity = random.randint(2,5)
         a = random.randint(1,5)
         if a <= 4:
             return EnemyLinear(direction, velocity)
         else:
-            print("Enemy Crazy Created")
             return EnemyCrazy(player, direction, velocity)
     
     def getInitialPosition(self, direction):
@@ -103,6 +107,7 @@ class EnemyLinear(Enemy):
     def __init__(self, direction = 0, velocity = 1) -> None:
         self.position = super().getInitialPosition(direction=direction)
         self.fire_interval = random.randint(15,30)
+        self.score = 3
         super().__init__( direction, velocity, self.position, self.fire_interval)
         
 
@@ -118,6 +123,7 @@ class EnemyCrazy(Enemy):
         self.posPlayer = player.position
         self.position = super().getInitialPosition(direction=direction)
         self.fire_interval = random.randint(7,15)
+        self.score = 4
         super().__init__(direction, velocity, self.position, self.fire_interval)
 
     def move(self):

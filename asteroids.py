@@ -19,7 +19,6 @@ class Asteroid(Actor):
         self.delete = False
         self.small = small
         self.id = id(self)
-        
         self.sprite = AsteroidSprite("asteroid.png" if not small else "smallerasteroid.png")
         # self.sprite.sprite.set_colorkey((131,96,73))
         self.center = (40, 40) if not small else (15, 10)
@@ -81,7 +80,7 @@ class Asteroid(Actor):
             mu = 450
             sigma = 100
             position = [-100 ,random.gauss(mu, sigma)]
-
+            
         return Asteroid(direction, velocity, position)
     
     @classmethod

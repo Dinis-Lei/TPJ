@@ -18,7 +18,7 @@ class Player(Actor):
         self.direction = -math.pi/2
         self.pivot = [40,57]
         self.velocity = 0
-        self.lives = 100
+        self.lives = 3
         self.offset = pygame.math.Vector2(30, 0)
         self.rect = self.sprite.get_sprite().get_rect()
         self.serv_loc = ServiceLocator.create()
@@ -80,7 +80,7 @@ class Player(Actor):
             self.prev_frame = frame
             x = self.position[0] + math.cos(self.direction) * 75
             y = self.position[1] + math.sin(self.direction) * 75
-            Bullet(self.direction, [x,y])    
+            Bullet(self.direction, [x,y], creator_id="player")    
             self.serv_loc.get_sound_manager().play("laser1", volume=1)
 
     def update_direction(self):
@@ -97,7 +97,10 @@ class Player(Actor):
         display.blit(img, rect)      
     
     def damage_taken(self, collider=None):
-        print(f"Damage taken, Lives {self.lives}")
+        if collider == "player_bullet":
+            return
+
         self.lives -= 1
+        self.observer.notify(UpdateLives, lives = self.lives)
         if self.lives == 0:
             self.delete = True

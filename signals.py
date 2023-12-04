@@ -45,4 +45,16 @@ class CheckCollision(Signal):
 class EnemyShoot(Signal):
     def execute(listener, **kwargs):
         listener.enemy_shoot()
+
+class UpdateScore(Signal):
+    def execute(listener, **kwargs):
+        listener.update_score(score=kwargs['score'])
+    
+class UpdateLives(Signal):
+    def execute(listener, **kwargs):
+        listener.update_lives(lives=kwargs["lives"])
+
+class UpdateHighScore(Signal):
+    def execute(listener, **kwargs):
+        listener.update_highScore(**kwargs)
     

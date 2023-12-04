@@ -16,6 +16,12 @@ class SpriteLoader:
         self.sprite = None
 
     def update_sprite(self, img = None, name = None ):
+        """
+            Change the sprite image by providing either a 
+            sprite image 
+            or a 
+            name of a sprite image
+        """
         if img != None:
             self.sprite = img
         else:
