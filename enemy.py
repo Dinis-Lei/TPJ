@@ -31,7 +31,7 @@ class Enemy(Actor):
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Update, self)
         self.observer.subscribe(Move, self)
-        #self.observer.subscribe(EnemyShoot, self)
+        self.observer.subscribe(EnemyShoot, self)
         self.observer.subscribe(CheckCollision, self)
 
         # Collision Set up
@@ -66,13 +66,16 @@ class Enemy(Actor):
         if self.lives == 0:
             self.delete = True
     
-    # def enemy_shoot(self):
-    #     print("Enemy shooting you")
-    #     if self.i == self.fire_interval:
-    #         bullet = Bullet(self.observer, self.direction, self.position)
-    #         self.i = 0
-    #     else: 
-    #         self.i += 1
+    def enemy_shoot(self):
+        print("Enemy shooting you")
+        if self.i == self.fire_interval:
+
+            x = self.position[0] + math.cos(self.direction) * 75
+            y = self.position[1] + math.sin(self.direction) * 75
+            Bullet(self.direction, [x,y])  
+            self.i = 0
+        else: 
+            self.i += 1
     def check_bounds(self):
         if not 0 <= self.position[0] <= WIDTH*SCALE or not 0 <= self.position[1] <= HEIGHT*SCALE:
             self.delete = True
@@ -83,7 +86,7 @@ class Enemy(Actor):
             self.observer.unsubscribe(Display, self)
             self.observer.unsubscribe(Update, self)
             self.observer.unsubscribe(Move, self)
-            #self.observer.unsubscribe(EnemyShoot, self)
+            self.observer.unsubscribe(EnemyShoot, self)
             self.observer.unsubscribe(CheckCollision, self)
             self.collision_box = self.collision_box.delete()
 
@@ -95,8 +98,7 @@ class Enemy(Actor):
         velocity = random.randint(2,5)
         a = random.randint(1,5)
         if a <= 4:
-            pass
-            #return EnemyLinear(observer, direction, velocity)
+            return EnemyLinear(direction, velocity)
         else:
             print("Enemy Crazy Created")
             return EnemyCrazy(player, direction, velocity)

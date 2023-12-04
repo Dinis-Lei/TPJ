@@ -8,17 +8,20 @@ from player import Player
 from game_vars import SCALE, WIDTH, HEIGHT
 from asteroids import Asteroid
 from enemy import Enemy
+from soundManager import SoundManager
 
 
 class MainLoop():
 
     def __init__(self) -> None:
-        pygame.font.init()
-        self.display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
-
         self.input_handler = InputHandler()
         self.serv_loc = ServiceLocator.create()
         self.obs = self.serv_loc.get_observer()
+        self.sound_manager = self.serv_loc.get_sound_manager()
+        pygame.init()
+        pygame.font.init()
+        self.display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
+
         self.clock = pygame.time.Clock()
         self.running = True
 
@@ -32,7 +35,6 @@ class MainLoop():
         frame = 0
         player = Player()
         self.running = True
-        
 
         while self.running:
             self.display.fill("white")
@@ -43,7 +45,6 @@ class MainLoop():
             self.obs.notify(Move)
             self.obs.notify(CheckCollision)
             self.obs.notify(Update)
-            self.obs.notify(EnemyShoot)
             self.obs.notify(Display) # Update all sprites
             # update window
             pygame.display.flip()
@@ -65,7 +66,6 @@ class MainLoop():
 
         menu.mainloop(self.display)
 
-pygame.init()
 
 
 

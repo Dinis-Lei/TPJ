@@ -7,8 +7,8 @@ import os
 assetpath = "assets/SpaceShooterRedux/PNG/"
 display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 spriteDict = {}
-for img in os.listdir("./usedAssets"):
-    spriteDict[img] = image.load(f"./usedAssets/{img}")
+for img in os.listdir("./usedAssets/images"):
+    spriteDict[img] = image.load(f"./usedAssets/images/{img}")
 
 class SpriteLoader:
     def __init__(self) -> None:

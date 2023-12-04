@@ -81,6 +81,7 @@ class Player(Actor):
             x = self.position[0] + math.cos(self.direction) * 75
             y = self.position[1] + math.sin(self.direction) * 75
             Bullet(self.direction, [x,y])    
+            self.serv_loc.get_sound_manager().play("laser1", volume=1)
 
     def rotate(self):
         image = self.sprite.get_sprite()
