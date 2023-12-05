@@ -11,6 +11,7 @@ class InputHandler():
         pygame.K_q: Quit,
         # pygame.K_ESCAPE: Pause,
         pygame.K_SPACE: Shoot,
+        pygame.K_e: Nuke,
     }
 
     def handle_input(self):

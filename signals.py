@@ -56,5 +56,21 @@ class UpdateLives(Signal):
 
 class UpdateHighScore(Signal):
     def execute(listener, **kwargs):
-        listener.update_highScore(**kwargs)
+        listener.update_highScore()
+
+class Spawn(Signal):
+    def execute(listener, **kwargs):
+        listener.spawn(frame=kwargs["frame"])
+
+class PlayerPosition(Signal):
+    def execute(listener, **kwargs):
+        listener.update_player_pos(pos=kwargs["pos"])
+
+class DestroyAll(Signal):
+    def execute(listener, **kwargs):
+        listener.destroy_all()
+
+class Nuke(Signal):
+    def execute(listener, **kwargs):
+        listener.nuke(frame=kwargs["frame"])
     

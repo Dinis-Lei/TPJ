@@ -6,7 +6,7 @@ from collision import *
 import math
 from bullet import Bullet
 
-AccelerateMAX = 10
+AccelerateMAX = 15
 BrakeMAX = -5
 SHOOTING_COOLDOWN = 5
 
@@ -24,11 +24,14 @@ class Player(Actor):
         self.serv_loc = ServiceLocator.create()
         self.observer = self.serv_loc.get_observer()
         self.delete = False
+        self.nuke_charges = 3
+        self.nuke_cooldown = -10
 
         # Subscribe to events
         self.observer.subscribe(Accelerate, self)
         self.observer.subscribe(Brake, self)
         self.observer.subscribe(Shoot, self)
+        self.observer.subscribe(Nuke, self)
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
         self.observer.subscribe(Update, self)
@@ -55,6 +58,7 @@ class Player(Actor):
         self.position[1] += math.sin(self.direction) * self.velocity
 
         self.collision_box.move()
+        self.observer.notify(PlayerPosition, pos=self.position.copy())
 
     def check_collision(self):
         self.collision_box.check_collision()
@@ -80,7 +84,7 @@ class Player(Actor):
             self.prev_frame = frame
             x = self.position[0] + math.cos(self.direction) * 75
             y = self.position[1] + math.sin(self.direction) * 75
-            Bullet(self.direction, [x,y], creator_id="player")    
+            Bullet(self.direction, [x,y], creator_id="player", velocity=20)    
             self.serv_loc.get_sound_manager().play("laser1", volume=1)
 
     def update_direction(self):
@@ -104,3 +108,10 @@ class Player(Actor):
         self.observer.notify(UpdateLives, lives = self.lives)
         if self.lives == 0:
             self.delete = True
+
+    def nuke(self, frame):
+    
+        if self.nuke_charges > 0 and frame > self.nuke_cooldown+10:
+            self.nuke_cooldown = frame
+            self.nuke_charges -= 1
+            self.observer.notify(DestroyAll)

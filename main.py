@@ -4,6 +4,7 @@ import pygame_menu
 from hud import HUD
 from input_handler import InputHandler
 from observer import Observer
+from spawnerManager import SpawnerManager
 from spriteloader import SpriteLoader
 from service_locator import ServiceLocator
 from signals import *
@@ -38,6 +39,7 @@ class MainLoop():
         print("Starting game")
         frame = 0
         player = Player()
+        spawner = SpawnerManager()
         self.running = True
         background = image.load(f"./usedAssets/blue.png")
         background = pygame.transform.scale(background,(WIDTH*SCALE,HEIGHT*SCALE))
@@ -53,13 +55,15 @@ class MainLoop():
             self.obs.notify(EnemyShoot)
             self.obs.notify(Update)
             self.obs.notify(Display) # Update all sprites
+            self.obs.notify(Spawn, frame=frame)
             # update window
             pygame.display.flip()
             self.clock.tick(15)
 
-            if (frame % 30) == 0:
-                Asteroid.create()
-                Enemy.create(player)
+
+            # if (frame % 30) == 0:
+            #     Asteroid.create()
+            #     Enemy.create(player)
 
             frame += 1
 

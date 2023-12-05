@@ -22,5 +22,9 @@ class Observer:
 
         # Remove any listeners that have been unsubscribed
         for signal, listener in self.unsubscribe_buffer:
-            self.listeners.get(signal, list()).remove(listener)
+            try:
+                self.listeners.get(signal, list()).remove(listener)
+            except:
+                print(signal, listener)
+                self.listeners.get(signal, list()).remove(listener)
         self.unsubscribe_buffer.clear()
