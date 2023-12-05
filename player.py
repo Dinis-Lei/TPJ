@@ -36,6 +36,7 @@ class Player(Actor):
         self.observer.subscribe(Move, self)
         self.observer.subscribe(Update, self)
         self.observer.subscribe(CheckCollision, self)
+        self.observer.subscribe(CatchPowerUp, self)
 
         # Collision Set up
         self.collision_box = CollisionCircle(self, center=self.rect.center, radius=50, id="player")
@@ -101,7 +102,7 @@ class Player(Actor):
         display.blit(img, rect)      
     
     def damage_taken(self, collider=None):
-        if collider == "player_bullet":
+        if collider == "player_bullet" or  collider == "powerup":
             return
 
         self.lives -= 1
@@ -115,3 +116,11 @@ class Player(Actor):
             self.nuke_cooldown = frame
             self.nuke_charges -= 1
             self.observer.notify(DestroyAll)
+
+    def power_up(self, type):
+        if type == "nuke":
+            self.nuke_charges += 1 if self.nuke_charges < 3 else 0
+        elif type == "life":
+            self.lives += 1
+            print(f"Add life {self.lives}")
+            self.observer.notify(UpdateLives, lives = self.lives)

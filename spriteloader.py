@@ -11,9 +11,8 @@ for img in os.listdir("./usedAssets/images"):
     spriteDict[img] = image.load(f"./usedAssets/images/{img}")
 
 class SpriteLoader:
-    def __init__(self) -> None:
-        self.sprites = spriteDict
-        self.sprite = None
+    def __init__(self, name) -> None:
+        self.sprite = spriteDict[name]
 
     def update_sprite(self, img = None, name = None ):
         """
@@ -25,17 +24,19 @@ class SpriteLoader:
         if img != None:
             self.sprite = img
         else:
-            self.sprite = self.sprites[name]
+            self.sprite = spriteDict[name]
 
     def display_sprite(self, rect):
         display.blit(self.sprite, rect)
 
+    def get_sprite(self):
+        return spriteDict[self.og]
+
 
 
 class PlayerSprite(SpriteLoader):
-    def __init__(self, name, angle=0) -> None:
-        super().__init__()
-        self.sprite = self.sprites[name]
+    def __init__(self, name) -> None:
+        super().__init__(name)
         self.og = name
     
     def update_sprite(self, img = None, name = None):
@@ -48,16 +49,15 @@ class PlayerSprite(SpriteLoader):
         display.blit(self.sprite, (x,y, SCALE, SCALE))
     
     def get_sprite(self):
-        return self.sprites[self.og]
+        return spriteDict[self.og]
 
 
 class AsteroidSprite(SpriteLoader):
     def __init__(self, name) -> None:
-        super().__init__()
-        self.sprite = self.sprites[name]
+        super().__init__(name)
     
     def update_sprite(self, name):
-        super().update_sprite(name)
+        super().update_sprite(name=name)
 
     def display_sprite(self, x, y):
         super().display_sprite((x,y, SCALE, SCALE))
@@ -65,8 +65,7 @@ class AsteroidSprite(SpriteLoader):
 
 class BulletSprite(SpriteLoader):
     def __init__(self, name) -> None:
-        super().__init__()
-        self.sprite = self.sprites[name]
+        super().__init__(name)
         self.og = name
         
     def update_sprite(self, name):
@@ -76,12 +75,11 @@ class BulletSprite(SpriteLoader):
         super().display_sprite(rect=rect)
     
     def get_sprite(self):
-        return self.sprites[self.og]
+        return spriteDict[self.og]
 
 class EnemySprite(SpriteLoader):
     def __init__(self, name) -> None:
-        super().__init__()
-        self.sprite = self.sprites[name]
+        super().__init__(name)
         self.og = name
     
     def update_sprite(self, name):
@@ -91,23 +89,4 @@ class EnemySprite(SpriteLoader):
         display.blit(self.sprite, (x,y, SCALE, SCALE))
     
     def get_sprite(self):
-        return self.sprites[self.og]
-
-
-class CollisionSprite(SpriteLoader):
-    def __init__(self, width, height) -> None:
-        super().__init__()
-        self.sprite = pygame.sprite.Sprite()
-        surface = pygame.Surface((SCALE*width, SCALE*height))
-        surface.set_alpha(128)
-        surface.fill("yellow")
-        self.sprite = surface
-
-    def display_sprite(self, rect):
-        super().display_sprite(rect=rect)
-
-    def get_sprite(self):
-        return self.sprite
-    
-    def update_sprite(self, img=None):
-        self.sprite.image = img
+        return spriteDict[self.og]

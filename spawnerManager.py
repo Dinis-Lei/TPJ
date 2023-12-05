@@ -1,5 +1,8 @@
 from enum import Enum
+from asteroids import Asteroid
+from enemy import *
 from game_vars import *
+from powerup import PowerUp
 from service_locator import ServiceLocator
 from entityFactory import EntityFactory
 import random
@@ -7,18 +10,21 @@ from signals import *
 
 SPAWER_POOL_BASE = {
     "easy" : {
-        "asteroid" : 5,
-        "enemy_linear" : 3,
+        "asteroid" : 10,
+        "enemy_linear" : 2,
+        "powerup" : 1,
     },
     "medium" : {
         "asteroid" : 7,
-        "enemy_linear" : 6,
-        "enemy_crazy" : 3,
+        "enemy_linear" : 4,
+        "enemy_crazy" : 1,
+        "powerup" : 2,
     },
     "hard" : {
         "asteroid" : 10,
-        "enemy_linear" : 7,
-        "enemy_crazy" : 10,
+        "enemy_linear" : 3,
+        "enemy_crazy" : 4,
+        "powerup" : 2,
     },
 }
 
@@ -79,7 +85,16 @@ class SpawnerManager():
                 r = random.randint(self.counter, self.spawn_interval)
                 if r >= self.spawn_interval*0.90:
                     # print(f"Spawning {entity}, {amount}")
-                    EntityFactory.create_entity(entity)
+                    if entity == "asteroid":
+                        Asteroid.create()
+                    elif entity == "enemy_linear":
+                        EnemyLinear.create()
+                    elif entity == "enemy_crazy":
+                        EnemyCrazy.create()
+                    elif entity == "enemy":
+                        Enemy.create()
+                    elif entity == "powerup":
+                        PowerUp.create()
                     c += 1
             self.pool[entity] -= c
         

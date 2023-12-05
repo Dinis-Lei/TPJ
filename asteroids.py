@@ -30,6 +30,8 @@ class Asteroid(Actor):
         self.observer.subscribe(DestroyAll, self)
 
     def hit_object(self, collider=None):
+        if collider == "powerup":
+            return
         self.delete = True
 
     def move(self):

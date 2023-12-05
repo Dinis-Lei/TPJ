@@ -46,7 +46,7 @@ class Enemy(Actor):
         self.collision_box.check_collision()
     
     def damage_taken(self, collider=None):
-        if collider == f"{self.id}_bullet":
+        if collider == f"{self.id}_bullet" or collider == "powerup":
             return
         elif collider == "player_bullet":
             self.observer.notify(UpdateScore, score=10)
@@ -56,6 +56,7 @@ class Enemy(Actor):
             self.delete = True
     
     def enemy_shoot(self):
+        self.i += 1 if random.random() < 0.85 else 0    # Make fire rate more random
         if self.i == self.fire_interval:
 
             x = self.position[0] + math.cos(self.direction) * 75
@@ -63,8 +64,8 @@ class Enemy(Actor):
             Bullet(self.direction, [x,y], creator_id=self.id)  
             self.serv_locator.get_sound_manager().play("laser2")
             self.i = 0
-        else: 
-            self.i += 1
+
+            
     def check_bounds(self):
         if not -200 <= self.position[0] <= WIDTH*SCALE+200 or not -200 <= self.position[1] <= HEIGHT*SCALE+200:
             self.delete = True

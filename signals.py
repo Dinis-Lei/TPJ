@@ -73,4 +73,8 @@ class DestroyAll(Signal):
 class Nuke(Signal):
     def execute(listener, **kwargs):
         listener.nuke(frame=kwargs["frame"])
+
+class CatchPowerUp(Signal):
+    def execute(listener, **kwargs):
+        listener.power_up(type=kwargs["type"])
     
