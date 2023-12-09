@@ -4,7 +4,7 @@ import pygame_menu
 from hud import HUD
 from input_handler import InputHandler
 from observer import Observer
-from spawnerManager import SpawnerManager
+from spawner_manager import SpawnerManager
 from spriteloader import SpriteLoader
 from service_locator import ServiceLocator
 from signals import *
@@ -12,7 +12,7 @@ from player import Player
 from game_vars import SCALE, WIDTH, HEIGHT
 from asteroids import Asteroid
 from enemy import Enemy
-from soundManager import SoundManager
+from sound_manager import SoundManager
 
 
 class MainLoop():
@@ -22,6 +22,7 @@ class MainLoop():
         self.serv_loc = ServiceLocator.create()
         self.obs = self.serv_loc.get_observer()
         self.sound_manager = self.serv_loc.get_sound_manager()
+        self.hud = HUD()
         pygame.init()
         pygame.font.init()
         self.display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
@@ -31,11 +32,11 @@ class MainLoop():
 
         self.obs.subscribe(Quit, self)
 
+
     def quit(self):
         self.running = False
 
     def run(self):
-        HUD()
         print("Starting game")
         frame = 0
         player = Player()
@@ -59,20 +60,26 @@ class MainLoop():
             # update window
             pygame.display.flip()
             self.clock.tick(15)
-
-
-            # if (frame % 30) == 0:
-            #     Asteroid.create()
-            #     Enemy.create(player)
-
             frame += 1
+
+        self.endScreen()
 
 
     def menu(self):
         menu = pygame_menu.Menu('Welcome', 1200, 900,
                             theme=pygame_menu.themes.THEME_GREEN)
 
-        menu.add.button('Start Game', self.run)
+        if self.running:
+            menu.add.button('Start Game', self.run)
+        menu.add.button('Quit', pygame_menu.events.EXIT)
+
+        menu.mainloop(self.display)
+
+    def endScreen(self):
+        menu = pygame_menu.Menu('Game Over', 1200, 900,
+                            theme=pygame_menu.themes.THEME_BLUE)
+        
+        menu.add.label(f"Score: {self.hud.score}")
         menu.add.button('Quit', pygame_menu.events.EXIT)
 
         menu.mainloop(self.display)

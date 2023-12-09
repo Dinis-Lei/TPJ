@@ -26,6 +26,8 @@ class Player(Actor):
         self.delete = False
         self.nuke_charges = 3
         self.nuke_cooldown = -10
+        self.invulnerability = False
+        self.invulnerability_cooldown = 0
 
         # Subscribe to events
         self.observer.subscribe(Accelerate, self)
@@ -65,14 +67,12 @@ class Player(Actor):
         self.collision_box.check_collision()
 
     def update(self):
-        """ Update sprite """
-        if self.lives == 2:
-            self.sprite.update_sprite(name="player2.png")
-        elif self.lives == 1:
-            self.sprite.update_sprite(name="player1.png")
+        if self.invulnerability_cooldown < 0:
+            self.invulnerability = False
         else:
-            self.sprite.update_sprite(name="player3.png")
+            self.invulnerability_cooldown -= 1
 
+        
         if self.delete:
             self.observer.unsubscribe(Display, self)
             self.observer.unsubscribe(Move, self)
@@ -102,9 +102,10 @@ class Player(Actor):
         display.blit(img, rect)      
     
     def damage_taken(self, collider=None):
-        if collider == "player_bullet" or  collider == "powerup":
+        if self.invulnerability or collider == "player_bullet" or  collider == "powerup":
             return
-
+        self.invulnerability = True
+        self.invulnerability_cooldown = 5
         self.lives -= 1
         self.observer.notify(UpdateLives, lives = self.lives)
         if self.lives == 0:
@@ -116,10 +117,12 @@ class Player(Actor):
             self.nuke_cooldown = frame
             self.nuke_charges -= 1
             self.observer.notify(DestroyAll)
+            self.observer.notify(UpdateNukes, nukes=self.nuke_charges)
 
     def power_up(self, type):
         if type == "nuke":
             self.nuke_charges += 1 if self.nuke_charges < 3 else 0
+            self.observer.notify(UpdateNukes, nukes=self.nuke_charges)
         elif type == "life":
             self.lives += 1
             print(f"Add life {self.lives}")

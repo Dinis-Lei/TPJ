@@ -1,4 +1,5 @@
 class Signal:
+    """ Base class for signals """
     def execute():
         raise NotImplemented
     
@@ -57,6 +58,10 @@ class UpdateLives(Signal):
 class UpdateHighScore(Signal):
     def execute(listener, **kwargs):
         listener.update_highScore()
+
+class UpdateNukes(Signal):
+    def execute(listener, **kwargs):
+        listener.update_nukes(nukes=kwargs["nukes"])
 
 class Spawn(Signal):
     def execute(listener, **kwargs):

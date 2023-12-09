@@ -1,5 +1,5 @@
 from observer import Observer
-from soundManager import SoundManager
+from sound_manager import SoundManager
 
 class ServiceLocator():
     _instance = None
@@ -27,6 +27,9 @@ class ServiceLocator():
 
     @classmethod
     def create(cls):
+        """
+            Creates singleton for service locator
+        """
         if cls._instance is None:
             cls._instance = cls.__new__(cls)
         return cls._instance

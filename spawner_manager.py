@@ -24,6 +24,7 @@ SPAWER_POOL_BASE = {
         "asteroid" : 10,
         "enemy_linear" : 3,
         "enemy_crazy" : 4,
+        "enemy" : 2, 
         "powerup" : 2,
     },
 }
