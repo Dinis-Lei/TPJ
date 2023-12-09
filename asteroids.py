@@ -65,7 +65,10 @@ class Asteroid(Actor):
 
     @classmethod
     def create(cls):
-        """ Normal asteroid factory """
+        """ 
+            Normal asteroid creation method 
+            Spawns asteroids outside the screen and their location is based on the direction they are going
+        """
 
         direction = math.radians(random.randint(0,359))
         velocity = random.randint(1,5) # testar depois a velocidade
@@ -91,7 +94,10 @@ class Asteroid(Actor):
     
     @classmethod
     def factory_small(cls, position):
-        """ Small asteroid factory """
+        """ 
+            Small asteroid creation method 
+            Spawns asteroids outside the screen and their location is based on the direction they are going
+        """
         n = random.randint(1,4)
         directions = [math.pi/4, 3*math.pi/4, 5*math.pi/4, 7*math.pi/4]
         for _ in range(n):

@@ -95,6 +95,9 @@ class Enemy(Actor):
             return EnemyCrazy(direction, velocity)
     
     def getInitialPosition(self, direction):
+        """
+            Determines the initial position of the enemy based on the direction it is going
+        """
         if math.pi/4 < direction <= math.pi*3/4:
             return [random.randint(0,WIDTH*SCALE),-100]
         elif math.pi*3/4 < direction <= math.pi*5/4:
