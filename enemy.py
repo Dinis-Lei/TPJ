@@ -3,24 +3,24 @@ import random
 
 import pygame
 from actor import Actor
-from observer import Observer
 from collision import CollisionCircle
 from bullet import Bullet
 from service_locator import ServiceLocator
-from spriteloader import EnemySprite
+from spriteloader import SpriteLoader
 from game_vars import *
 from signals import *
 
 display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 
 class Enemy(Actor):
-    def __init__(self, direction = 0, velocity = 1,  position = [0,0], fire_interval = 3)  -> None:
+    def __init__(self, direction = 0, velocity = 1,  position = [0,0], fire_interval = 3, spritename = "enemy.png")  -> None:
+        super().__init__(position, SpriteLoader(spritename))
+        
         self.direction = direction
         self.velocity = velocity
         self.position = position
         self.id = id(self)
 
-        self.sprite = EnemySprite("enemy.png")
         self.fire_interval = fire_interval
         self.serv_locator = ServiceLocator.create()
         self.observer = self.serv_locator.get_observer()
@@ -48,7 +48,7 @@ class Enemy(Actor):
     def damage_taken(self, collider=None):
         if collider == f"{self.id}_bullet" or collider == "powerup":
             return
-        elif collider == "player_bullet":
+        elif collider == "player_bullet" and not self.delete:
             self.observer.notify(UpdateScore, score=10)
 
         self.lives -= 1
@@ -117,7 +117,7 @@ class EnemyLinear(Enemy):
         self.position = super().getInitialPosition(direction=direction)
         self.fire_interval = random.randint(15,30)
         self.score = 3
-        super().__init__( direction, velocity, self.position, self.fire_interval)
+        super().__init__( direction, velocity, self.position, self.fire_interval, spritename="enemy2.png")
         
 
     def move(self):
@@ -136,7 +136,7 @@ class EnemyLinear(Enemy):
 
 class EnemyCrazy(Enemy):
     def __init__(self, direction = 0, velocity = 1) -> None:
-        super().__init__(direction, velocity)
+        super().__init__(direction, velocity, spritename="enemy.png")
         self.posPlayer = [0,0]
         self.position = self.getInitialPosition(direction=direction)
         self.fire_interval = random.randint(7,15)

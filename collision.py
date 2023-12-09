@@ -1,4 +1,3 @@
-from observer import Observer
 from service_locator import ServiceLocator
 from signals import *
 from actor import Actor
@@ -130,15 +129,15 @@ class CollisionCircle(Collision):
         collide = pygame.sprite.spritecollide(self.circle, collision_group, False, pygame.sprite.collide_circle)
 
         if len(collide) > 1 :#and not self.is_colliding:
-            # for collider in collide:
-            #     if collider != self.circle:
-            #         collider_id = collision_id[collider]
-            #         self.enter_func(collider = collider_id)
-            #         self.is_colliding = True
+            for collider in collide:
+                if collider != self.circle:
+                    collider_id = collision_id[collider]
+                    self.enter_func(collider = collider_id)
+                    self.is_colliding = True
             
-            collider_id = collision_id[[c for c in collide if c != self.circle][0]]
-            self.enter_func(collider = collider_id)
-            self.is_colliding = True
+            # collider_id = collision_id[[c for c in collide if c != self.circle][0]]
+            # self.enter_func(collider = collider_id)
+            # self.is_colliding = True
         elif len(collide) < 2:
             self.is_colliding = False
         

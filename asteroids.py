@@ -1,10 +1,10 @@
 import random
 from actor import Actor
 from collision import CollisionCircle
-from observer import Observer
+from game_vars import *
 import math
 
-from spriteloader import AsteroidSprite
+from spriteloader import SpriteLoader
 from signals import *
 from service_locator import ServiceLocator
 
@@ -19,7 +19,7 @@ class Asteroid(Actor):
         self.delete = False
         self.small = small
         self.id = id(self)
-        self.sprite = AsteroidSprite("asteroid.png" if not small else "smallerasteroid.png")
+        self.sprite = SpriteLoader("asteroid.png" if not small else "smallerasteroid.png")
         # self.sprite.sprite.set_colorkey((131,96,73))
         self.center = (40, 40) if not small else (15, 10)
         self.collision_box = CollisionCircle(self, center=self.center, radius=45 if not small else 15)
@@ -41,7 +41,8 @@ class Asteroid(Actor):
         self.collision_box.move()
 
     def display(self):
-        self.sprite.display_sprite(self.position[0] - self.center[0], self.position[1] - self.center[1])
+        self.sprite.display_sprite(
+            (self.position[0] - self.center[0], self.position[1] - self.center[1], SCALE, SCALE))
         
 
     def check_collision(self):

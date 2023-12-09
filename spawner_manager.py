@@ -4,7 +4,6 @@ from enemy import *
 from game_vars import *
 from powerup import PowerUp
 from service_locator import ServiceLocator
-from entityFactory import EntityFactory
 import random
 from signals import *
 

@@ -1,7 +1,7 @@
 import pygame
 from actor import Actor
 from signals import *
-from spriteloader import PlayerSprite
+from spriteloader import SpriteLoader
 from collision import *
 import math
 from bullet import Bullet
@@ -14,7 +14,7 @@ display = pygame.display.set_mode((SCALE * WIDTH, SCALE * HEIGHT))
 
 class Player(Actor):
     def __init__(self) -> None:
-        super().__init__([400,200], PlayerSprite("player3(1).png"))
+        super().__init__([400,200], SpriteLoader("player3.png"))
         self.direction = -math.pi/2
         self.pivot = [40,57]
         self.velocity = 0

@@ -6,7 +6,7 @@ from service_locator import ServiceLocator
 from signals import *
 from game_vars import *
 from collision import CollisionBox, CollisionCircle
-from spriteloader import BulletSprite
+from spriteloader import SpriteLoader
 from pygame.math import Vector2
 
 class Bullet(Actor):
@@ -16,7 +16,7 @@ class Bullet(Actor):
         self.position = position
         self.center = (5,5)
         self.velocity = velocity
-        self.sprite = BulletSprite("bullet.png")
+        self.sprite = SpriteLoader("bullet.png")
         self.observer = self.serv_loc.get_observer()
         self.creator_id = creator_id
 
