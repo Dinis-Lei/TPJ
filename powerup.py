@@ -22,6 +22,7 @@ class PowerUp(Actor):
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Update, self)
         self.observer.subscribe(CheckCollision, self)
+        self.observer.subscribe(Quit, self)
 
         self.collision_box = CollisionCircle(self, center=(20, 20), radius=20, offset=[-15,-15], id="powerup")
         self.collision_box.set_enter_func(self.hit_object)
@@ -40,8 +41,17 @@ class PowerUp(Actor):
             self.observer.unsubscribe(CheckCollision, self)
             self.collision_box = self.collision_box.delete()
 
-    
-
+    def quit(self):
+        self.delete = True
+        # if self.collision_box != None:
+        #     self.collision_box = self.collision_box.delete()
+        #     self.observer.unsubscribe(Display, self)
+        #     self.observer.unsubscribe(Update, self)
+        #     self.observer.unsubscribe(CheckCollision, self)
+        #     self.delete = False
+        # self.observer.unsubscribe(DestroyAll, self)
+        # self.observer.unsubscribe(Quit, self)
+        
     def hit_object(self, collider=None):
         if self.delete:
             return

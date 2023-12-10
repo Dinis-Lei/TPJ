@@ -24,7 +24,7 @@ class Player(Actor):
         self.serv_loc = ServiceLocator.create()
         self.observer = self.serv_loc.get_observer()
         self.delete = False
-        self.nuke_charges = 3
+        self.nuke_charges = 0
         self.nuke_cooldown = -10
         self.invulnerability = False
         self.invulnerability_cooldown = 0
@@ -78,6 +78,12 @@ class Player(Actor):
             self.observer.unsubscribe(Move, self)
             self.observer.unsubscribe(Update, self)
             self.collision_box = self.collision_box.delete()
+            self.observer.unsubscribe(Accelerate, self)
+            self.observer.unsubscribe(Brake, self)
+            self.observer.unsubscribe(Shoot, self)
+            self.observer.unsubscribe(Nuke, self)
+            self.observer.unsubscribe(CheckCollision, self)
+            self.observer.unsubscribe(CatchPowerUp, self)
             self.observer.notify(Quit)
 
     def shoot(self, frame=0):

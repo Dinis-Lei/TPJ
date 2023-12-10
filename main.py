@@ -44,7 +44,7 @@ class MainLoop():
         self.running = True
         background = image.load(f"./usedAssets/blue.png")
         background = pygame.transform.scale(background,(WIDTH*SCALE,HEIGHT*SCALE))
-
+        self.obs.notify(Start)
         while self.running:
             self.display.blit(background, (0,0))
             commands = self.input_handler.handle_input()
@@ -59,9 +59,10 @@ class MainLoop():
             self.obs.notify(Spawn, frame=frame)
             # update window
             pygame.display.flip()
-            self.clock.tick(15)
+            self.clock.tick(20)
             frame += 1
 
+        self.obs.notify(UpdateHighScore, score = self.hud.score)
         self.endScreen()
 
 
@@ -71,6 +72,7 @@ class MainLoop():
 
         if self.running:
             menu.add.button('Start Game', self.run)
+        menu.add.button('How To Play', self.options)
         menu.add.button('Quit', pygame_menu.events.EXIT)
 
         menu.mainloop(self.display)
@@ -78,10 +80,19 @@ class MainLoop():
     def endScreen(self):
         menu = pygame_menu.Menu('Game Over', 1200, 900,
                             theme=pygame_menu.themes.THEME_BLUE)
-        
-        menu.add.label(f"Score: {self.hud.score}")
+        menu.add.label(f"Your score was: {self.hud.score}")
+        menu.add.label(f"Highscores:\n1 - {self.hud.scores[0]}\n2 - {self.hud.scores[1]}\n3 - {self.hud.scores[2]}")
+        menu.add.button('Restart Game', self.run)
         menu.add.button('Quit', pygame_menu.events.EXIT)
-
+        
+        menu.mainloop(self.display)
+    
+    def options(self):
+        menu = pygame_menu.Menu('Controls', 1200, 900,
+                            theme=pygame_menu.themes.THEME_GREEN)
+        menu.add.label(f"W: Accelerate\nS: Brake\nE: Use Nuke\nMouse: Rotate Ship\nSpace: Shoot\nTry to kill as many enemy ships as possible to score points.\nYou have 3 initial lifes and you can pick up more with the power up shield.\nYou can  have 3 nukes maximum at a time.\nAfter being hit you have invulnerability for some seconds, be careful!")
+        menu.add.button('Back', self.menu)
+        
         menu.mainloop(self.display)
 
 
