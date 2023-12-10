@@ -78,6 +78,12 @@ class Player(Actor):
             self.observer.unsubscribe(Move, self)
             self.observer.unsubscribe(Update, self)
             self.collision_box = self.collision_box.delete()
+            self.observer.unsubscribe(Accelerate, self)
+            self.observer.unsubscribe(Brake, self)
+            self.observer.unsubscribe(Shoot, self)
+            self.observer.unsubscribe(Nuke, self)
+            self.observer.unsubscribe(CheckCollision, self)
+            self.observer.unsubscribe(CatchPowerUp, self)
             self.observer.notify(Quit)
 
     def shoot(self, frame=0):

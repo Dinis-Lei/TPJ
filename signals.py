@@ -11,6 +11,10 @@ class Quit(Signal):
     def execute(listener, **kwargs):
         listener.quit() 
 
+class Start(Signal):
+    def execute(listener, **kwargs):
+        listener.start() 
+
 class Accelerate(Signal):
     def execute(listener, **kwargs):
         listener.accelerate()

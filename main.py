@@ -44,7 +44,7 @@ class MainLoop():
         self.running = True
         background = image.load(f"./usedAssets/blue.png")
         background = pygame.transform.scale(background,(WIDTH*SCALE,HEIGHT*SCALE))
-
+        self.obs.notify(Start)
         while self.running:
             self.display.blit(background, (0,0))
             commands = self.input_handler.handle_input()
@@ -59,7 +59,7 @@ class MainLoop():
             self.obs.notify(Spawn, frame=frame)
             # update window
             pygame.display.flip()
-            self.clock.tick(15)
+            self.clock.tick(20)
             frame += 1
 
         self.endScreen()
@@ -80,6 +80,7 @@ class MainLoop():
                             theme=pygame_menu.themes.THEME_BLUE)
         
         menu.add.label(f"Score: {self.hud.score}")
+        menu.add.button('Restart Game', self.run)
         menu.add.button('Quit', pygame_menu.events.EXIT)
 
         menu.mainloop(self.display)

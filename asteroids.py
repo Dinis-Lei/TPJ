@@ -28,6 +28,7 @@ class Asteroid(Actor):
         self.observer.subscribe(Move, self)
         self.observer.subscribe(Update, self)
         self.observer.subscribe(DestroyAll, self)
+        self.observer.subscribe(Quit, self)
 
     def hit_object(self, collider=None):
         if collider == "powerup":
@@ -47,6 +48,16 @@ class Asteroid(Actor):
 
     def check_collision(self):
         self.collision_box.check_collision()
+
+    def quit(self):
+        if(self.collision_box!= None):
+            self.collision_box = self.collision_box.delete()
+            self.observer.unsubscribe(Display, self)
+            self.observer.unsubscribe(Move, self)
+            self.observer.unsubscribe(Update, self)
+            self.observer.unsubscribe(DestroyAll, self)
+            self.delete = False
+
 
     def update(self):
         """ Update object """

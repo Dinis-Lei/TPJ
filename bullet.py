@@ -24,6 +24,7 @@ class Bullet(Actor):
         self.observer.subscribe(Move, self)
         self.observer.subscribe(Update, self)
         self.observer.subscribe(DestroyAll, self)
+        self.observer.subscribe(Quit, self)
 
         rotated_img, self.rotated_rect = self.rotate()
         self.sprite.update_sprite(rotated_img)
@@ -56,6 +57,10 @@ class Bullet(Actor):
         if collider == self.creator_id:
             return
         self.delete = True
+
+    def quit(self):
+        self.delete = True
+
 
     def move(self):
         """ Bullet movement pattern """

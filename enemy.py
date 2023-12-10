@@ -36,6 +36,7 @@ class Enemy(Actor):
         self.observer.subscribe(EnemyShoot, self)
         self.observer.subscribe(CheckCollision, self)
         self.observer.subscribe(DestroyAll, self)
+        self.observer.subscribe(Quit, self)
 
         # Collision Set up
         self.collision_box = CollisionCircle(self, center=self.rect.center, radius=50, id=self.id)
@@ -65,6 +66,8 @@ class Enemy(Actor):
             self.serv_locator.get_sound_manager().play("laser2")
             self.i = 0
 
+    def quit(self):
+        self.delete = True
             
     def check_bounds(self):
         if not -200 <= self.position[0] <= WIDTH*SCALE+200 or not -200 <= self.position[1] <= HEIGHT*SCALE+200:
