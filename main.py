@@ -72,6 +72,7 @@ class MainLoop():
 
         if self.running:
             menu.add.button('Start Game', self.run)
+        menu.add.button('How To Play', self.options)
         menu.add.button('Quit', pygame_menu.events.EXIT)
 
         menu.mainloop(self.display)
@@ -83,6 +84,14 @@ class MainLoop():
         menu.add.label(f"Highscores:\n1 - {self.hud.scores[0]}\n2 - {self.hud.scores[1]}\n3 - {self.hud.scores[2]}")
         menu.add.button('Restart Game', self.run)
         menu.add.button('Quit', pygame_menu.events.EXIT)
+        
+        menu.mainloop(self.display)
+    
+    def options(self):
+        menu = pygame_menu.Menu('Controls', 1200, 900,
+                            theme=pygame_menu.themes.THEME_GREEN)
+        menu.add.label(f"W: Accelerate\nS: Brake\nE: Use Nuke\nMouse: Rotate Ship\nSpace: Shoot\nTry to kill as many enemy ships as possible to score points.\nYou have 3 initial lifes and you can pick up more with the power up shield.\nYou can  have 3 nukes maximum at a time.")
+        menu.add.button('Back', self.menu)
         
         menu.mainloop(self.display)
 

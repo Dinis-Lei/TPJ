@@ -24,7 +24,7 @@ class Player(Actor):
         self.serv_loc = ServiceLocator.create()
         self.observer = self.serv_loc.get_observer()
         self.delete = False
-        self.nuke_charges = 3
+        self.nuke_charges = 0
         self.nuke_cooldown = -10
         self.invulnerability = False
         self.invulnerability_cooldown = 0

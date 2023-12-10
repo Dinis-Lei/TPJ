@@ -7,7 +7,7 @@ class HUD():
         self.score = 0
         self.lives = 3
         self.high_score = 0
-        self.nukes = 3
+        self.nukes = 0
         self.serv_loc = service_locator.ServiceLocator.create()
         self.observer = self.serv_loc.get_observer()
         self.observer.subscribe(UpdateScore, self)
