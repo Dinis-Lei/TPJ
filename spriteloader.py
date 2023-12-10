@@ -12,6 +12,7 @@ for img in os.listdir("./usedAssets/images"):
 
 class SpriteLoader:
     def __init__(self, name) -> None:
+        """ Initiate the Sprite Loader """
         self.sprite = spriteDict[name]
         self.og = name
 
@@ -28,7 +29,9 @@ class SpriteLoader:
             self.sprite = spriteDict[name]
 
     def display_sprite(self, rect):
+        """ Display sprite """
         display.blit(self.sprite, rect)
 
     def get_sprite(self):
+        """ returns Sprite to use on rotations """
         return spriteDict[self.og]

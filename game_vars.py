@@ -1,3 +1,4 @@
+""" Global Game Variables """
 SCALE = 10
 WIDTH = 120
 HEIGHT = 90

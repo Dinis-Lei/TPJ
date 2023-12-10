@@ -7,6 +7,8 @@ from service_locator import ServiceLocator
 import random
 from signals import *
 
+
+""" spawner pool base, based on the current wave difficulty """
 SPAWER_POOL_BASE = {
     "easy" : {
         "asteroid" : 10,
@@ -28,6 +30,7 @@ SPAWER_POOL_BASE = {
     },
 }
 
+""" Different difficulty states """
 class DifficultyStates(Enum):
     EASY = "easy"
     MEDIUM = "medium"
@@ -36,6 +39,7 @@ class DifficultyStates(Enum):
 class SpawnerManager():
 
     def __init__(self) -> None:
+        """ Initiate SpawnerManager """
         self.serv_loc = ServiceLocator.create()
         self.obs = self.serv_loc.get_observer()
         self.obs.subscribe(Spawn, self)
@@ -48,6 +52,7 @@ class SpawnerManager():
 
 
     def state_machine(self, frame:int):
+        """ State machine to define next state, based on current state, check table on README for better perception"""
         r = random.random()
 
         if self.difficulty_state == DifficultyStates.EASY:
@@ -79,12 +84,12 @@ class SpawnerManager():
     
 
     def spawn(self, frame):
+        """ spawn entities """
         for entity, amount in self.pool.items():
             c = 0
             for _ in range(amount):
                 r = random.randint(self.counter, self.spawn_interval)
                 if r >= self.spawn_interval*0.90:
-                    # print(f"Spawning {entity}, {amount}")
                     if entity == "asteroid":
                         Asteroid.create()
                     elif entity == "enemy_linear":
@@ -103,4 +108,3 @@ class SpawnerManager():
         if sum(self.pool.values()) == 0:
             self.counter = 0
             self.state_machine(frame)
-            print(f"New state: {self.difficulty_state}")

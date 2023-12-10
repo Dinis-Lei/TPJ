@@ -1,6 +1,8 @@
 import pygame
 from signals import *
 
+
+""" This class handles the input received from the player """
 class InputHandler():
 
     command = {
@@ -9,7 +11,6 @@ class InputHandler():
         pygame.K_DOWN: Brake,
         pygame.K_s: Brake,
         pygame.K_q: Quit,
-        # pygame.K_ESCAPE: Pause,
         pygame.K_SPACE: Shoot,
         pygame.K_e: Nuke,
     }

@@ -12,21 +12,19 @@ collision_id = dict()
 
 class Collision():
 
-    """ """
+    """ Initiate collision """
 
     def __init__(self, parent: Actor) -> None:
         self.obs = ServiceLocator.create().get_observer()
         self.parent = parent
         self.is_colliding = False
 
+        """ Signals that collision subscribes """
         self.obs.subscribe(Display, self)
         self.obs.subscribe(CheckCollision, self)
 
     def set_enter_func(self, func):
         self.enter_func = func
-
-    def move(self):
-        pass
 
     def check_collision(self):
         pass
@@ -41,6 +39,7 @@ class Collision():
 
 class CollisionBox(Collision):
 
+    """ Initiate collsion box """
     def __init__(self, actor: Actor, width, height, direction, id=None) -> None:
         super().__init__(actor)
 
@@ -57,6 +56,7 @@ class CollisionBox(Collision):
         collision_id[self.square] = id
 
     def check_collision(self):
+        """ checking for collision """
         collide = pygame.sprite.spritecollide(self.square, collision_group, False, pygame.sprite.collide_circle)
 
         if len(collide) > 1 and not self.is_colliding:
@@ -67,32 +67,33 @@ class CollisionBox(Collision):
             self.is_colliding = False
     
     def move(self):
+        """ moving collision box """
         self.circle.rect.center = (self.parent.position[0]+self.center[0], self.parent.position[1]+self.center[1])
-        #self.square.rect.center = (self.parent.position[0], self.parent.position[1])
 
     def display(self):
+        """ displaying collision box """
         img, rect = self.rotate()
-        #print(rect, self.square.rect)
         display.blit(img, rect)
 
     def rotate(self):
         image = self.square.image
-        # offset from pivot to center
+        """ offset from pivot to center """
         image_rect = image.get_rect(topleft = (self.parent.position[0] - self.center[0], self.parent.position[1]-self.center[1]))
         offset_center_to_pivot = pygame.math.Vector2(self.parent.position) - image_rect.center
-        # roatated offset from pivot to center
+        """ roatated offset from pivot to center """
         rotated_offset = offset_center_to_pivot.rotate(-int(-self.direction*180/math.pi-90)%360)
 
-        # rotated image center
+        """ rotated image center """
         rotated_image_center = (self.parent.position[0] - rotated_offset.x, self.parent.position[1] - rotated_offset.y)
 
-        # get a rotated image
+        """ get a rotated image """
         rotated_image = pygame.transform.rotate(image, int(-self.direction*180/math.pi-90)%360)
         rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
 
         return rotated_image, rotated_image_rect
     
     def delete(self):
+        """ Delete collision Box when game ends or when object is hit and disappears """
         super().delete()
         collision_group.remove(self.square)
         collision_id.pop(self.square)
@@ -100,6 +101,7 @@ class CollisionBox(Collision):
 class CollisionCircle(Collision):
 
     def __init__(self, actor: Actor, center, radius, offset=[0,0], id=None) -> None:
+        """ Initiate Collision Circle """
         super().__init__(actor)
         self.center = center
         self.radius = radius
@@ -117,15 +119,17 @@ class CollisionCircle(Collision):
         collision_id[self.circle] = id
 
     def display(self):
+        """ Displaying collision circle """
         display.blit(self.circle.image, (self.parent.position[0] - self.center[0] - self.offset[0], 
                                          self.parent.position[1] - self.center[1] - self.offset[1]))
 
 
     def move(self):
-        #self.circle.rect.center = (self.parent.position[0]-self.center[0], self.parent.position[1]-self.center[1])
+        """ Movement of the collision circle """
         self.circle.rect.center = (self.parent.position[0] - self.offset[0], self.parent.position[1] - self.offset[1])
 
     def check_collision(self):
+        """ Check if collision circle is hitting something """
         collide = pygame.sprite.spritecollide(self.circle, collision_group, False, pygame.sprite.collide_circle)
 
         if len(collide) > 1 :#and not self.is_colliding:
@@ -135,9 +139,6 @@ class CollisionCircle(Collision):
                     self.enter_func(collider = collider_id)
                     self.is_colliding = True
             
-            # collider_id = collision_id[[c for c in collide if c != self.circle][0]]
-            # self.enter_func(collider = collider_id)
-            # self.is_colliding = True
         elif len(collide) < 2:
             self.is_colliding = False
         
@@ -146,6 +147,7 @@ class CollisionCircle(Collision):
 
 
     def delete(self):
+        """ Deleting collision circle when game is over or object disappears """
         super().delete()
         collision_group.remove(self.circle)
         collision_id.pop(self.circle)

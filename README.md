@@ -34,7 +34,7 @@ Prototype was used so that similar objects can share the same implementation, fo
 
 ### Component
 
-To decople the logic of and entity and its graphical representation, the graphics of each object are separated.
+To decouple the logic of an entity and its graphical representation, the graphics of each object are separated.
 
 ### Flyweight
 
@@ -42,7 +42,7 @@ Because there are multiple copies of the same entity in the screen we use the fl
 
 ### Singleton
 
-We use the singleton pattern to garantee that every entity use the same service locator, observer and sound manager. The service locator is the one that garantees the creation of the singletons.
+We use the singleton pattern to garantee that every entity uses the same service locator, observer and sound manager. The service locator is the one that garantees the creation of the singletons.
 
 ### State Machine
 
@@ -75,7 +75,7 @@ As stated before the observer signals each phase of the game loop, this is done 
 
 - **Move**, this phase updates the location of every entity
 
-- **Check collision**, checks if there are collision occuring
+- **Check collision**, checks if there are collisions occuring
 
 - **Update**, updates the states of each entity (if they need to be deleted)
 

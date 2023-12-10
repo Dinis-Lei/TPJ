@@ -12,6 +12,7 @@ POWERUP_MAX = 5
 class PowerUp(Actor):
 
     def __init__(self, position, type) -> None:
+        """ Initiate power up """
         super().__init__(position, None)
         self.delete = False
         self.type = type
@@ -30,9 +31,11 @@ class PowerUp(Actor):
         self.sprite = SpriteLoader("powerupBlue_shield.png" if self.type == "life" else "powerupBlue_bolt.png")
 
     def check_collision(self):
+        """ check if something collides with power up """
         self.collision_box.check_collision()
 
     def update(self):
+        """ updating power up, once it is either picked up or eliminated """
         if self.delete:
             global powerup_counter
             powerup_counter -= 1
@@ -42,17 +45,15 @@ class PowerUp(Actor):
             self.collision_box = self.collision_box.delete()
 
     def quit(self):
+        """ delete on endgame """
         self.delete = True
-        # if self.collision_box != None:
-        #     self.collision_box = self.collision_box.delete()
-        #     self.observer.unsubscribe(Display, self)
-        #     self.observer.unsubscribe(Update, self)
-        #     self.observer.unsubscribe(CheckCollision, self)
-        #     self.delete = False
-        # self.observer.unsubscribe(DestroyAll, self)
-        # self.observer.unsubscribe(Quit, self)
         
     def hit_object(self, collider=None):
+        """ check if power up is hit.
+            If it's hit by player its picked up.
+            If it spawns colliding with another powerup, it respawns 
+            If its hit by a bullet it is eliminated
+        """
         if self.delete:
             return
         
@@ -68,6 +69,7 @@ class PowerUp(Actor):
             self.collision_box.move()
     @classmethod
     def create(cls):
+        """ creating powerups """
         global powerup_counter
 
         if powerup_counter >= POWERUP_MAX:
@@ -78,6 +80,5 @@ class PowerUp(Actor):
         y = random.randint(200, HEIGHT*SCALE - 200)
 
         type = random.choice(["nuke", "life"])
-        print(type)
         return PowerUp([x, y], type)
 

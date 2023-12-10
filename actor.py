@@ -21,16 +21,17 @@ class Actor:
 
         image = self.sprite.get_sprite()
 
-        # offset from pivot to center
+        """ offset from pivot to center"""
         image_rect = image.get_rect(topleft = (self.position[0] - self.center[0], self.position[1]-self.center[1]))
         offset_center_to_pivot = pygame.math.Vector2(self.position) - image_rect.center
-        # roatated offset from pivot to center
+        """ rotated offset from pivot to center """
         rotated_offset = offset_center_to_pivot.rotate(-int(-self.direction*180/math.pi-90)%360)
 
-        # rotated image center
+        """ rotated image center """
         rotated_image_center = (self.position[0] - rotated_offset.x, self.position[1] - rotated_offset.y)
 
-        # get a rotated image
+        
+        """ get a rotated image """
         rotated_image = pygame.transform.rotate(image, int(-self.direction*180/math.pi-90)%360)
         rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
 

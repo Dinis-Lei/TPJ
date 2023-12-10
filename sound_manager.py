@@ -22,6 +22,10 @@ class SoundManager:
             "laser1": self.mixer.Sound("./usedAssets/sounds/sfx_laser1.ogg"),
             "laser2": self.mixer.Sound("./usedAssets/sounds/sfx_laser2.ogg"),
             "zap": self.mixer.Sound("./usedAssets/sounds/sfx_zap.ogg"),
+            "hit": self.mixer.Sound("./usedAssets/sounds/sfx_twoTone.ogg"),
+            "lose": self.mixer.Sound("./usedAssets/sounds/sfx_lose.ogg"),
+            "lifeUp": self.mixer.Sound("./usedAssets/sounds/sfx_shieldUp.ogg"),
+            "lifeDown": self.mixer.Sound("./usedAssets/sounds/sfx_shieldDown.ogg"),
         }
 
     def play(self, sound:str, loops:int=0, volume:float=0.1) -> None:
@@ -36,8 +40,6 @@ class SoundManager:
         Returns:
             None
         """
-        self.mixer.Sound("./usedAssets/sounds/sfx_twoTone.ogg").play()
-        #find an unused channel
         channel = self.mixer.find_channel()
         if channel:
             self.sounds[sound].set_volume(volume)
