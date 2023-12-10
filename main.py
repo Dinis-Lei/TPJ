@@ -90,7 +90,7 @@ class MainLoop():
     def options(self):
         menu = pygame_menu.Menu('Controls', 1200, 900,
                             theme=pygame_menu.themes.THEME_GREEN)
-        menu.add.label(f"W: Accelerate\nS: Brake\nE: Use Nuke\nMouse: Rotate Ship\nSpace: Shoot\nTry to kill as many enemy ships as possible to score points.\nYou have 3 initial lifes and you can pick up more with the power up shield.\nYou can  have 3 nukes maximum at a time.")
+        menu.add.label(f"W: Accelerate\nS: Brake\nE: Use Nuke\nMouse: Rotate Ship\nSpace: Shoot\nTry to kill as many enemy ships as possible to score points.\nYou have 3 initial lifes and you can pick up more with the power up shield.\nYou can  have 3 nukes maximum at a time.\nAfter being hit you have invulnerability for some seconds, be careful!")
         menu.add.button('Back', self.menu)
         
         menu.mainloop(self.display)
