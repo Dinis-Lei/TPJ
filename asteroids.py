@@ -22,7 +22,7 @@ class Asteroid(Actor):
         self.id = id(self)
         self.sprite = SpriteLoader("asteroid.png" if not small else "smallerasteroid.png")
         self.center = (40, 40) if not small else (15, 10)
-        
+
         """ Signals that asteroid subscribes """
         self.observer.subscribe(Display, self)
         self.observer.subscribe(Move, self)
@@ -87,8 +87,9 @@ class Asteroid(Actor):
 
     @classmethod
     def create(cls):
-        """ Normal sized asteroid factory 
-            Randomizing direction, velocity and position
+        """ 
+            Normal asteroid creation method 
+            Spawns asteroids outside the screen and their location is based on the direction they are going
         """
 
         direction = math.radians(random.randint(0,359))
