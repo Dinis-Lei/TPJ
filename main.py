@@ -82,7 +82,7 @@ class MainLoop():
                             theme=pygame_menu.themes.THEME_BLUE)
         menu.add.label(f"Your score was: {self.hud.score}")
         menu.add.label(f"Highscores:\n1 - {self.hud.scores[0]}\n2 - {self.hud.scores[1]}\n3 - {self.hud.scores[2]}")
-        menu.add.button('Restart Game', self.run)
+        # menu.add.button('Restart Game', self.run)
         menu.add.button('Quit', pygame_menu.events.EXIT)
         
         menu.mainloop(self.display)
