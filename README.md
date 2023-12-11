@@ -1,6 +1,7 @@
 # TPJ Space Arcade
 
-Dinis Lei 98452
+Dinis Lei 98452  
+Bernardo Leandro 98652
 
 ## Game concept
 
